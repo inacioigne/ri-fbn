@@ -8,7 +8,7 @@ COPY ui/package.json ui/yarn.lock ./
 RUN yarn install --network-timeout 300000
 
 ADD ./ui /app/
-ENV NODE_OPTIONS="--max_old_space_size=8192"
+ENV NODE_OPTIONS="--max_old_space_size=4096"
 RUN yarn build:prod
 
 FROM node:18-alpine
