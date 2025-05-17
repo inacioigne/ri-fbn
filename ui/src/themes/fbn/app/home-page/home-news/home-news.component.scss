@@ -1,0 +1,25 @@
+:host {
+  display: block;
+
+  div.background-image-container {
+    color: white;
+    position: relative;
+    height: 150px;
+
+    @media (max-width: 400px) {
+      height: 100px;
+    }
+
+    .background-image > img {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: top;
+      padding-bottom: 10px;
+    }
+  }
+}

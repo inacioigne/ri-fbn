@@ -12,6 +12,7 @@ npm-debug.log
 /coverage
 
 /dist/
+dist.tar.gz
 /coverage/
 
 .idea

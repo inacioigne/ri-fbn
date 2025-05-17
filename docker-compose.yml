@@ -18,6 +18,7 @@ services:
        target: 4000
      stdin_open: true
      tty: true
+     restart: unless-stopped    
   # Dspace API
   api:
     env_file:
@@ -40,6 +41,7 @@ services:
         target: 8000
     stdin_open: true
     tty: true
+    restart: unless-stopped
     volumes:
     - assetstore:/dspace/assetstore
     - ./api/dspace/config:/dspace/config
@@ -72,6 +74,7 @@ services:
         target: 5432
     stdin_open: true
     tty: true
+    restart: unless-stopped
     volumes:
       - pgdata:/pgdata
 
@@ -95,6 +98,7 @@ services:
         target: 8983
     stdin_open: true
     tty: true
+    restart: unless-stopped
     working_dir: /var/solr/data
     volumes:
       - solr_data:/var/solr/data
