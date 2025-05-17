@@ -1,3 +1,5 @@
 .env
 old_docs
 /dist
+/dist.tar.gz
+
