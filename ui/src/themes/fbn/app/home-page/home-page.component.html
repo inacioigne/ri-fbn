@@ -12,23 +12,7 @@
   <ng-container *ngTemplateOutlet="homeContent"></ng-container>
 </div>
 <ds-suggestions-popup></ds-suggestions-popup>
- <!-- COLEÇÕES -->
- 
- <div class="container">
-  <h2>Coleções do Repositório</h2>
-  <div class="row">
-    <div *ngFor="let item of collections" class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
-      <div class="card h-100">
-        <a [routerLink]="item.link" class="text-decoration-none text-dark">
-          <div class="card-body text-center">
-            <img [src]="item.image" class="img-fluid mb-3" alt="{{item.title}}">
-            <h5 class="card-title mb-0">{{item.title}}</h5>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
- </div>
+
 
 <ng-template #homeContent>
   <ng-container *ngIf=" (site$ | async) as site">
@@ -37,7 +21,21 @@
   <ds-search-form [inPlaceSearch]="false"
                          [searchPlaceholder]="'home.search-form.placeholder' | translate">
   </ds-search-form>
-  
-  <!-- <ds-top-level-community-list></ds-top-level-community-list> -->
+   <!-- COLEÇÕES -->
+ <div class="container">
+  <h2>Coleções do Repositório</h2>
+  <div class="row">
+    <div *ngFor="let item of collections" class="col-12 col-md-6 col-lg-3 col-xl-2 mb-4">
+      <div class="card h-100">
+        <a [routerLink]="item.link" class="text-decoration-none text-dark">
+          <div class="card-body text-center">
+            <img [src]="item.image" class="img-fluid mb-3" alt="{{item.title}}">
+            <p class="card-subtitle fs-6 mb-0">{{item.title}}</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+ </div>
   <ds-recent-item-list *ngIf="recentSubmissionspageSize>0"></ds-recent-item-list>
 </ng-template>
