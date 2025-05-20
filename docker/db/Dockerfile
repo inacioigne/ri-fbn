@@ -1,4 +1,4 @@
-FROM postgres:15
+FROM docker.io/postgres:${POSTGRES_VERSION}
 
 ENV POSTGRES_DB=dspace
 ENV POSTGRES_USER=dspace

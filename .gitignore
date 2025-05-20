@@ -1,4 +1,5 @@
 .env
+.env_prod
 old_docs
 /dist
 /dist.tar.gz
