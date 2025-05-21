@@ -5,7 +5,7 @@ services:
   # Dspace UI
   ui:
      container_name: dspace-ui
-     image: dspace/dspace-angular:${DSPACE_VERSION}-dist
+     image: fbn/dspace-ui:${DSPACE_VERSION}-dist
      build: 
        context: .
        dockerfile: ./ui-dist.dockerfile
@@ -24,7 +24,7 @@ services:
     env_file:
       - .env
     container_name: dspace-api      
-    image: dspace/dspace:${DSPACE_VERSION}
+    image: fbn/dspace-api:${DSPACE_VERSION}
     build: 
       context: .
       dockerfile: api.dockerfile
@@ -56,7 +56,7 @@ services:
   # Banco de Dados
   dspacedb:
     container_name: dspacedb
-    # image: dspace/dspace-postgres-pgcrypto:${DSPACE_VERSION}
+    image: fbn/dspacedb:${DSPACE_VERSION}
     env_file:
       - .env
     build: 
@@ -81,7 +81,7 @@ services:
   # DSpace Solr
   dspacesolr:
     container_name: dspacesolr
-    image: dspace/dspace-solr:${DSPACE_VERSION}
+    image: fbn/dspacesolr:${DSPACE_VERSION}
     env_file:
       - .env
     build:
