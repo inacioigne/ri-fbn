@@ -3,4 +3,5 @@
 old_docs
 /dist
 /dist.tar.gz
+/docker/db/Dockerfile
 
