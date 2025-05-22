@@ -51,16 +51,43 @@
         <!-- Form which defines the first page/section of the "traditional" DSpace submission process,
              often used when depositing normal Items (i.e. Items which are not Entities). -->
         <form name="traditionalpageone">
+        <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>type</dc-element>
+                    <dc-qualifier></dc-qualifier>
+                    <repeatable>false</repeatable>
+                    <label>Tipo</label>
+                    <input-type value-pairs-name="common_types">dropdown</input-type>
+                    <hint>Selecione o tipo de item.
+                    </hint>
+                    <required>Coloque o tipo do item</required>
+                </field>
+            </row>
             <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>contributor</dc-element>
                     <dc-qualifier>author</dc-qualifier>
                     <repeatable>true</repeatable>
-                    <label>Author</label>
+                    <label>Autor</label>
+                    <!-- <type-bind>Artigo</type-bind> -->
                     <input-type>onebox</input-type>
-                    <hint>Enter the author's name (Family name, Given names).</hint>
-                    <required></required>
+                    <hint>Entre com o nome do autor (Ex. Vasconcelos, Alcebíades Pereira)</hint>
+                    <required>É obrigatório o nome do autor</required>
+                </field>
+            </row>
+            <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>contributor</dc-element>
+                    <dc-qualifier>advisor</dc-qualifier>
+                    <repeatable>true</repeatable>
+                    <label>Orientador</label>
+                    <type-bind>Artigo, Tese, Apresentação</type-bind>
+                    <input-type>onebox</input-type>
+                    <hint>Entre com o nome do orientador (Ex. Vasconcelos, Alcebíades Pereira)</hint>
+                    <!-- <required>É obrigatório o nome do autor</required> -->
                 </field>
             </row>
             <row>
@@ -69,13 +96,13 @@
                     <dc-element>title</dc-element>
                     <dc-qualifier></dc-qualifier>
                     <repeatable>false</repeatable>
-                    <label>Title</label>
+                    <label>Título</label>
                     <input-type>onebox</input-type>
-                    <hint>Enter the main title of the item.</hint>
-                    <required>You must enter a main title for this item.</required>
+                    <hint>Entre com o título e subtítulo (se houver) do item. (Ex. Um enigma de Deus: a história de um legado de fé e educação)</hint>
+                    <required>O título é obrigatório</required>
                 </field>
             </row>
-            <row>
+            <!-- <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>title</dc-element>
@@ -86,23 +113,22 @@
                     <hint>If the item has any alternative titles, please enter them here.</hint>
                     <required></required>
                 </field>
-            </row>
+            </row> -->
             <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>date</dc-element>
                     <dc-qualifier>issued</dc-qualifier>
                     <repeatable>false</repeatable>
-                    <label>Date of Issue</label>
+                    <label>Data de publicação</label>
+                    <!-- <type-bind>Artigo</type-bind> -->
                     <style>col-sm-4</style>
                     <input-type>date</input-type>
-                    <hint>Please give the date of previous publication or public distribution.
-                        You can leave out the day and/or month if they aren't applicable.
-                    </hint>
-                    <required>You must enter at least the year.</required>
+                    <hint>Ano de conclusão do trabalho</hint>
+                    <required>Ano de conclusão obrigatório.</required>
                 </field>
 
-                <field>
+                <!-- <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>publisher</dc-element>
                     <dc-qualifier></dc-qualifier>
@@ -112,17 +138,17 @@
                     <input-type>onebox</input-type>
                     <hint>Enter the name of the publisher of the previously issued instance of this item.</hint>
                     <required></required>
-                </field>
+                </field> -->
             </row>
-            <row>
+           <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>identifier</dc-element>
                     <dc-qualifier>citation</dc-qualifier>
                     <repeatable>false</repeatable>
-                    <label>Citation</label>
+                    <label>Citação</label>
                     <input-type>onebox</input-type>
-                    <hint>Enter the standard citation for the previously issued instance of this item.</hint>
+                    <hint>Referência de como o trabalho será citado em outros documentos de acordo com a NBR ABNT6023.</hint>
                     <required></required>
                 </field>
             </row>
@@ -130,21 +156,21 @@
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>relation</dc-element>
-                    <dc-qualifier>ispartofseries</dc-qualifier>
-                    <repeatable>true</repeatable>
-                    <label>Series/Report No.</label>
-                    <input-type>series</input-type>
-                    <hint>Enter the series and number assigned to this item by your community.</hint>
+                    <dc-qualifier>ispartof</dc-qualifier>
+                    <repeatable>false</repeatable>
+                    <label>É parte de:</label>
+                    <input-type>onebox</input-type>
+                    <hint>Coloque o volume ou evento ao qual o item faz parte.</hint>
                     <required></required>
                 </field>
             </row>
-            <row>
+             <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>identifier</dc-element>
-                    <dc-qualifier></dc-qualifier>
+                    <dc-qualifier></dc-qualifier> 
                     <!-- An input-type of qualdrop_value MUST be marked as repeatable -->
-                    <repeatable>true</repeatable>
+                     <repeatable>true</repeatable>
                     <label>Identifiers</label>
                     <input-type value-pairs-name="common_identifiers">qualdrop_value</input-type>
                     <hint>If the item has any identification numbers or codes associated with
@@ -152,33 +178,18 @@
                     </hint>
                     <required></required>
                 </field>
-            </row>
-            <row>
-                <field>
-                    <dc-schema>dc</dc-schema>
-                    <dc-element>type</dc-element>
-                    <dc-qualifier></dc-qualifier>
-                    <repeatable>true</repeatable>
-                    <label>Type</label>
-                    <input-type value-pairs-name="common_types">dropdown</input-type>
-                    <hint>Select the type of content of the item.
-                    </hint>
-                    <required>You must choose at least one type.</required>
-                </field>
-            </row>
+            </row> 
+            
             <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>language</dc-element>
                     <dc-qualifier>iso</dc-qualifier>
                     <repeatable>false</repeatable>
-                    <label>Language</label>
+                    <label>Idioma</label>
                     <input-type value-pairs-name="common_iso_languages">dropdown</input-type>
-                    <hint>Select the language of the main content of the item. If the language does not appear in the
-                        list, please select 'Other'. If the content does not really have a language (for example, if it
-                        is a dataset or an image) please select 'N/A'.
-                    </hint>
-                    <required></required>
+                    <hint>Selecione o idioma do item</hint>
+                    <required>O idioma é obrigatório</required>
                 </field>
             </row>
         </form>
@@ -193,11 +204,12 @@
                     <dc-qualifier></dc-qualifier>
                     <!-- An input-type of tag MUST be marked as repeatable -->
                     <repeatable>true</repeatable>
-                    <label>Subject Keywords</label>
-                    <input-type>tag</input-type>
-                    <hint>Enter appropriate subject keywords or phrases.</hint>
+                    <label>Assunto</label>
+                    <!-- <input-type>tag</input-type> -->
+                    <input-type>onebox</input-type>
+                    <hint>Entre com o assunto do item.</hint>
                     <required></required>
-                    <vocabulary>srsc</vocabulary>
+                    <!-- <vocabulary>srsc</vocabulary> -->
                 </field>
             </row>
             <row>
@@ -206,13 +218,14 @@
                     <dc-element>description</dc-element>
                     <dc-qualifier>abstract</dc-qualifier>
                     <repeatable>false</repeatable>
+                     <!-- <type-bind>Artigo, Tese, Dissertação</type-bind> -->
                     <label>Abstract</label>
                     <input-type>textarea</input-type>
-                    <hint>Enter the abstract of the item.</hint>
+                    <hint>Entre com o resumo do item.</hint>
                     <required></required>
                 </field>
             </row>
-            <row>
+            <!-- <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>description</dc-element>
@@ -223,8 +236,8 @@
                     <hint>Enter the names of any sponsors and/or funding codes in the box.</hint>
                     <required></required>
                 </field>
-            </row>
-            <row>
+            </row> -->
+            <!-- <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>description</dc-element>
@@ -235,7 +248,7 @@
                     <hint>Enter any other description or comments in this box.</hint>
                     <required></required>
                 </field>
-            </row>
+            </row> -->
         </form>
 
 
@@ -366,7 +379,7 @@
                     <hint>Select the type(s) of content of the item. To select more than one value in the list, you may
                         have to hold down the "CTRL" or "Shift" key.
                     </hint>
-                    <required>You must choose at least one type.</required>
+                    <required></required>
                 </field>
             </row>
             <row>
@@ -516,7 +529,7 @@
 <!--            </row>-->
             <row>
                 <relation-field>
-                    <relationship-type>isPersonOfProject</relationship-type>
+                    <relationship-type>isProjectOfPerson</relationship-type>
                     <search-configuration>person</search-configuration>
                     <repeatable>true</repeatable>
                     <label>Investigator</label>
@@ -531,18 +544,18 @@
             </row>
             <row>
                 <relation-field>
-                    <relationship-type>isOrgUnitOfProject</relationship-type>
+                    <relationship-type>isProjectOfOrgUnit</relationship-type>
                     <search-configuration>orgunit</search-configuration>
                     <repeatable>false</repeatable>
                     <label>Organization</label>
                     <hint>Enter the organization's name</hint>
                     <linked-metadata-field>
-                        <dc-schema>dc</dc-schema>
-                        <dc-element>contributor</dc-element>
-                        <dc-qualifier>other</dc-qualifier>
+                        <dc-schema>project</dc-schema>
+                        <dc-element>funder</dc-element>
+                        <dc-qualifier>name</dc-qualifier>
                         <input-type>onebox</input-type>
                     </linked-metadata-field>
-                    <externalsources>ror</externalsources>
+                    <externalsources/>
                 </relation-field>
             </row>
             <row>
@@ -659,6 +672,155 @@
             </row>
         </form>
 
+        <!-- Formulário que define metadados para submissão da entidade Jornal -->
+        <form name="jornalStep">
+            <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>title</dc-element>
+                    <label>Título do Jornal</label>
+                    <input-type>onebox</input-type>
+                    <hint>Entre com o título do Jornal</hint>
+                    <required>O título é obrigatório</required>
+                </field>
+            </row>
+            <row>
+                <field>
+                    <dc-schema>creativework</dc-schema>
+                    <dc-element>editor</dc-element>
+                    <label>Editor</label>
+                    <input-type>name</input-type>
+                    <hint>Entre com o nome do responsável pelo Jornal</hint>
+                </field>
+            </row>
+             <row>
+                <field>
+                    <dc-schema>organization</dc-schema>
+                    <dc-element>address</dc-element>
+                    <dc-qualifier>addressLocality</dc-qualifier>
+                    <label>Cidade</label>
+                    <input-type>onebox</input-type>
+                    <hint>Coloque o nome da cidade do Jornal</hint>
+                </field>
+            </row>
+             <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>description</dc-element>
+                    <label>Descrição</label>
+                    <input-type>textarea</input-type>
+                    <hint>Faça uma descrição para o Jornal</hint>
+                </field>
+            </row>
+        </form>
+
+         <!-- Formulário que define metadados para submissão da entidade Numero de Jornal -->
+        <form name="jornalAnoStep">
+            <row>
+                <relation-field>
+                    <relationship-type>JornalPossuiAno</relationship-type>
+                    <search-configuration>jornal</search-configuration>
+                    <!-- example of filtering Discovery search for Journal by a specific publisher -->
+                    <!--<filter>creativework.publisher:somepublishername</filter>-->
+                    <label>Jornal</label>
+                    <hint>Selecione um Jornal</hint>
+                    <!-- <externalsources>sherpaJournal</externalsources> -->
+                </relation-field>
+            </row>
+            <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>title</dc-element>
+                    <label>Título do Jornal</label>
+                    <input-type>onebox</input-type>
+                    <hint>Entre com o título do Jornal</hint>
+                    <required>O título é obrigatório</required>
+                </field>
+            </row>
+            <row>
+                <field>
+                    <dc-schema>publicationvolume</dc-schema>
+                    <dc-element>volumeNumber</dc-element>
+                    <label>Ano</label>
+                    <input-type>onebox</input-type>
+                    <hint>Entre com o Ano do Jornal</hint>
+                </field>
+            </row>
+             <row>
+                <field>
+                    <dc-schema>creativework</dc-schema>
+                    <dc-element>datePublished</dc-element>
+                    <label>Issue date</label>
+                    <input-type>date</input-type>
+                    <hint>Enter the issue date of the journal volume</hint>
+                </field>
+            </row>
+
+        </form>
+
+         <!-- Formulário que define metadados para submissão da entidade Numero de Jornal -->
+        <form name="newsNumberStep">
+        <row>
+                <relation-field>
+                    <relationship-type>isNewsYearOfNewsNumber</relationship-type>
+                    <search-configuration>newsyear</search-configuration>
+                    <label>Ano do Jornal</label>
+                    <hint>Selecione o Ano do Jornal</hint>
+                </relation-field>
+            </row>
+            <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>title</dc-element>
+                    <label>Título do Jornal</label>
+                    <input-type>onebox</input-type>
+                    <hint>Entre com o título do Jornal</hint>
+                    <required>O título é obrigatório</required>
+                </field>
+            </row>
+             <row>
+                <field>
+                    <dc-schema>publicationissue</dc-schema>
+                    <dc-element>issueNumber</dc-element>
+                    <label>Número</label>
+                    <input-type>onebox</input-type>
+                    <hint>Coloque o número da edição</hint>
+                </field>
+            </row>
+            <row>
+                <field>
+                    <dc-schema>creativework</dc-schema>
+                    <dc-element>datePublished</dc-element>
+                    <label>Data de publicação</label>
+                    <input-type>date</input-type>
+                    <hint>Coloque a data de publicação</hint>
+                </field>
+            </row>
+            <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>description</dc-element>
+                    <label>Descrição</label>
+                    <input-type>textarea</input-type>
+                    <hint>Coloque uma descrição</hint>
+                </field>
+            </row>
+             <row>
+                <field>
+                    <dc-schema>dc</dc-schema>
+                    <dc-element>subject</dc-element>
+                    <repeatable>true</repeatable>
+                    <label>Assunto</label>
+                    <input-type>tag</input-type>
+                    <hint>Entre com o assunto</hint>
+                    <required></required>
+                    <!-- <vocabulary>srsc</vocabulary> -->
+                </field>
+            </row>
+           
+
+        </form>        
+
         <!-- Form which defines the metadata page/section for depositing Journal Entities -->
         <form name="journalStep">
             <row>
@@ -710,7 +872,7 @@
         </form>
 
         <!-- Form which defines the metadata page/section for depositing JournalVolume Entities -->
-        <form name="journalVolumeStep">
+        <form name="journalVolumeStep"> 
             <row>
                 <relation-field>
                     <relationship-type>isJournalOfVolume</relationship-type>
@@ -819,9 +981,9 @@
 
         </form>
 
-        <!-- Openaire specific forms -->
+        <!-- OpenAIRE specific forms -->
 
-        <form name="openairePublicationPageoneForm">
+        <form name="openAIREPublicationPageoneForm">
             <row>
                 <field>
                     <dc-schema>dc</dc-schema>
@@ -1041,7 +1203,7 @@
                     <hint>Select the type(s) of content of the item. To select more than one value in the list, you may
                         have to hold down the "CTRL" or "Shift" key.
                     </hint>
-                    <required>You must choose at least one type.</required>
+                    <required></required>
                 </field>
             </row>
             <row>
@@ -1071,7 +1233,7 @@
             </row>
         </form>
 
-        <form name="openairePublicationPagetwoForm">
+        <form name="openAIREPublicationPagetwoForm">
             <row>
                 <field>
                     <dc-schema>dc</dc-schema>
@@ -1083,7 +1245,7 @@
                     <input-type>tag</input-type>
                     <hint>Enter appropriate subject keywords or phrases.</hint>
                     <required></required>
-                    <vocabulary>srsc</vocabulary>
+                    <!-- <vocabulary>srsc</vocabulary> -->
                 </field>
             </row>
 
@@ -1129,7 +1291,7 @@
                         <dc-element>relation</dc-element>
                         <input-type>onebox</input-type>
                     </linked-metadata-field>
-                    <externalsources>openaireFunding</externalsources>
+                    <externalsources>openAIREFunding</externalsources>
                     <required></required>
                 </relation-field>
             </row>
@@ -1182,7 +1344,7 @@
             </row>
         </form>
 
-        <form name="openairePersonForm">
+        <form name="openAIREPersonForm">
             <row>
                 <field>
                     <dc-schema>person</dc-schema>
@@ -1246,7 +1408,7 @@
             </row>
         </form>
 
-        <form name="openaireProjectForm">
+        <form name="openAIREProjectForm">
             <row>
                 <field>
                     <dc-schema>dc</dc-schema>
@@ -1269,7 +1431,7 @@
             <row>
                 <relation-field>
                     <relationship-type>isFundingAgencyOfProject</relationship-type>
-                    <search-configuration>openaireFundingAgency</search-configuration>
+                    <search-configuration>openAIREFundingAgency</search-configuration>
                     <repeatable>false</repeatable>
                     <name-variants>false</name-variants>
                     <label>Funding Agency</label>
@@ -1302,7 +1464,7 @@
             </row>
         </form>
 
-        <form name="openaireOrganizationForm">
+        <form name="openAIREOrganizationForm">
             <row>
                 <field>
                     <dc-schema>organization</dc-schema>
@@ -1375,8 +1537,8 @@
                 <stored-value>other</stored-value>
             </pair>
             <pair>
-                <displayed-value>ISMN</displayed-value>
-                <stored-value>ismn</stored-value>
+                <displayed-value>DOI</displayed-value>
+                <stored-value>doi</stored-value>
             </pair>
             <pair>
                 <displayed-value>Gov't Doc #</displayed-value>
@@ -1392,94 +1554,88 @@
             </pair>
         </value-pairs>
 
-        <value-pairs value-pairs-name="common_types" dc-term="type">
+       <value-pairs value-pairs-name="common_types" dc-term="type">
             <pair>
-                <displayed-value>Animation</displayed-value>
-                <stored-value>Animation</stored-value>
+            <displayed-value>Apresentação</displayed-value>
+            <stored-value>Apresentação</stored-value>
+            </pair>
+           <pair>
+            <displayed-value>Artigo</displayed-value>
+            <stored-value>Artigo</stored-value>
+            </pair>
+             <pair>
+            <displayed-value>Banner</displayed-value>
+            <stored-value>Banner</stored-value>
             </pair>
             <pair>
-                <displayed-value>Article</displayed-value>
-                <stored-value>Article</stored-value>
+            <displayed-value>Boletim</displayed-value>
+            <stored-value>Boletim</stored-value>
             </pair>
             <pair>
-                <displayed-value>Book</displayed-value>
-                <stored-value>Book</stored-value>
+            <displayed-value>Capítulo de Livro</displayed-value>
+            <stored-value>Capítulo de Livro</stored-value>
             </pair>
             <pair>
-                <displayed-value>Book chapter</displayed-value>
-                <stored-value>Book chapter</stored-value>
+            <displayed-value>Folder</displayed-value>
+            <stored-value>Folder</stored-value>
             </pair>
             <pair>
-                <displayed-value>Dataset</displayed-value>
-                <stored-value>Dataset</stored-value>
+            <displayed-value>Folheto</displayed-value>
+            <stored-value>Folheto</stored-value>
+            </pair>
+             <pair>
+            <displayed-value>Jornal</displayed-value>
+            <stored-value>Jornal</stored-value>
             </pair>
             <pair>
-                <displayed-value>Learning Object</displayed-value>
-                <stored-value>Learning Object</stored-value>
+            <displayed-value>Livro</displayed-value>
+            <stored-value>Livro</stored-value>
+            </pair>
+             <pair>
+            <displayed-value>Monografia</displayed-value>
+            <stored-value>Monografia</stored-value>
+            </pair>
+             <pair>
+            <displayed-value>Produto de Graduação</displayed-value>
+            <stored-value>Produto de Graduação</stored-value>
+            </pair>
+
+            <pair>
+            <displayed-value>Projeto Experimental</displayed-value>
+            <stored-value>Projeto Experimental</stored-value>
             </pair>
             <pair>
-                <displayed-value>Image</displayed-value>
-                <stored-value>Image</stored-value>
+            <displayed-value>Produto de Pós-Graduação</displayed-value>
+            <stored-value>Produto de Pós-Graduação</stored-value>
             </pair>
             <pair>
-                <displayed-value>Image, 3-D</displayed-value>
-                <stored-value>Image, 3-D</stored-value>
+            <displayed-value>Imagem</displayed-value>
+            <stored-value>Imagem</stored-value>
+            </pair>
+            
+            <pair>
+            <displayed-value>Podcast</displayed-value>
+            <stored-value>Podcast</stored-value>
             </pair>
             <pair>
-                <displayed-value>Map</displayed-value>
-                <stored-value>Map</stored-value>
+            <displayed-value>Relatório</displayed-value>
+            <stored-value>Relatório</stored-value>
+            </pair>
+             <pair>
+            <displayed-value>Resumo</displayed-value>
+            <stored-value>Resumo</stored-value>
             </pair>
             <pair>
-                <displayed-value>Musical Score</displayed-value>
-                <stored-value>Musical Score</stored-value>
+            <displayed-value>Tese</displayed-value>
+            <stored-value>Tese</stored-value>
+            </pair>
+             <pair>
+            <displayed-value>Dissertação</displayed-value>
+            <stored-value>Dissertação</stored-value>
             </pair>
             <pair>
-                <displayed-value>Plan or blueprint</displayed-value>
-                <stored-value>Plan or blueprint</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Preprint</displayed-value>
-                <stored-value>Preprint</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Presentation</displayed-value>
-                <stored-value>Presentation</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Recording, acoustical</displayed-value>
-                <stored-value>Recording, acoustical</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Recording, musical</displayed-value>
-                <stored-value>Recording, musical</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Recording, oral</displayed-value>
-                <stored-value>Recording, oral</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Software</displayed-value>
-                <stored-value>Software</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Technical Report</displayed-value>
-                <stored-value>Technical Report</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Thesis</displayed-value>
-                <stored-value>Thesis</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Video</displayed-value>
-                <stored-value>Video</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Working Paper</displayed-value>
-                <stored-value>Working Paper</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>Other</displayed-value>
-                <stored-value>Other</stored-value>
+            <displayed-value>Video</displayed-value>
+            <stored-value>Video</stored-value>
             </pair>
         </value-pairs>
 
@@ -1487,23 +1643,19 @@
              "en_US", "en", "es", "de", "fr", "it", "ja", "zh", "other", ""
           -->
         <value-pairs value-pairs-name="common_iso_languages" dc-term="language_iso">
-            <pair>
-                <displayed-value>N/A</displayed-value>
-                <stored-value></stored-value>
+            <pair> 
+                <displayed-value>Portuguese</displayed-value>
+                <stored-value>pt</stored-value>
             </pair>
             <pair>
-                <displayed-value>English (United States)</displayed-value>
-                <stored-value>en_US</stored-value>
-            </pair>
-            <pair>
-                <displayed-value>English</displayed-value>
+                <displayed-value>Inglês</displayed-value>
                 <stored-value>en</stored-value>
             </pair>
             <pair>
-                <displayed-value>Spanish</displayed-value>
+                <displayed-value>Espanhol</displayed-value>
                 <stored-value>es</stored-value>
             </pair>
-            <pair>
+            <!-- <pair>
                 <displayed-value>German</displayed-value>
                 <stored-value>de</stored-value>
             </pair>
@@ -1523,10 +1675,7 @@
                 <displayed-value>Chinese</displayed-value>
                 <stored-value>zh</stored-value>
             </pair>
-            <pair>
-                <displayed-value>Portuguese</displayed-value>
-                <stored-value>pt</stored-value>
-            </pair>
+           
             <pair>
                 <displayed-value>Turkish</displayed-value>
                 <stored-value>tr</stored-value>
@@ -1534,10 +1683,10 @@
             <pair>
                 <displayed-value>(Other)</displayed-value>
                 <stored-value>other</stored-value>
-            </pair>
+            </pair>-->
         </value-pairs>
 
-        <!-- Openaire specific value pairs -->
+        <!-- OpenAIRE specific value pairs -->
 
         <value-pairs value-pairs-name="openaire_license_types" dc-term="license">
 
@@ -1549,27 +1698,27 @@
             </pair>
             <pair>
                 <displayed-value>Attribution (CC-BY)</displayed-value>
-                <stored-value>https://creativecommons.org/licenses/by/4.0/</stored-value>
+                <stored-value>http://creativecommons.org/licenses/by/4.0/</stored-value>
             </pair>
             <pair>
                 <displayed-value>Attribution, No Derivative Works (CC-BY-ND)</displayed-value>
-                <stored-value>https://creativecommons.org/licenses/by-nd/4.0/</stored-value>
+                <stored-value>http://creativecommons.org/licenses/by-nd/4.0/</stored-value>
             </pair>
             <pair>
                 <displayed-value>Attribution, Share-alike (CC-BY-SA)</displayed-value>
-                <stored-value>https://creativecommons.org/licenses/by-sa/4.0/</stored-value>
+                <stored-value>http://creativecommons.org/licenses/by-sa/4.0/</stored-value>
             </pair>
             <pair>
                 <displayed-value>Attribution, Non-commercial (CC-BY-NC)</displayed-value>
-                <stored-value>https://creativecommons.org/licenses/by-nc/4.0/</stored-value>
+                <stored-value>http://creativecommons.org/licenses/by-nc/4.0/</stored-value>
             </pair>
             <pair>
                 <displayed-value>Attribution, Non-commercial, No Derivative Works (CC-BY-NC-ND)</displayed-value>
-                <stored-value>https://creativecommons.org/licenses/by-nc-nd/4.0/</stored-value>
+                <stored-value>http://creativecommons.org/licenses/by-nc-nd/4.0/</stored-value>
             </pair>
             <pair>
                 <displayed-value>Attribution, Non-commercial, Share-alike (CC-BY-NC-SA)</displayed-value>
-                <stored-value>https://creativecommons.org/licenses/by-nc-sa/4.0/</stored-value>
+                <stored-value>http://creativecommons.org/licenses/by-nc-sa/4.0/</stored-value>
             </pair>
             <!-- Add here other licenses -->
             <pair>
@@ -1579,7 +1728,7 @@
 
         </value-pairs>
 
-        <!-- Openaire document types
+        <!-- OpenAIRE document types
              https://openaire-guidelines-for-literature-repository-managers.readthedocs.io/en/v4.0.0/field_publicationtype.html
              Based on COAR Vocabularies -> Controlled Vocabulary for Resource Type Genres (Version 2.0):
              http://vocabularies.coar-repositories.org/documentation/resource_types/
