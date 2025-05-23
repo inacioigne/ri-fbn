@@ -1,16 +1,3 @@
-# FROM docker.io/node:18-alpine AS build
-
-# RUN apk add --update python3 make g++ \
-#     && rm -rf /var/cache/apk/*
-
-# WORKDIR /app
-# COPY ui/package.json ui/yarn.lock ./
-# RUN yarn install --network-timeout 300000
-
-# ADD ./ui /app/
-# ENV NODE_OPTIONS="--max_old_space_size=4096"
-# RUN yarn build:prod
-
 FROM node:18-alpine
 RUN npm install --global pm2
 

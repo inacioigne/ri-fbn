@@ -11,6 +11,8 @@ services:
        dockerfile: ./ui-dist.dockerfile
      env_file:
        - .env
+     environment:
+      - NODE_ENV=production
      networks:
        - dockernet
      ports:
