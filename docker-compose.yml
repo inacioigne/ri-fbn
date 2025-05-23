@@ -45,6 +45,7 @@ services:
     volumes:
     - assetstore:/dspace/assetstore
     - ./api/dspace/config:/dspace/config
+    - /home/fbn/dbip-city-lite-2025-05.mmdb:/dspace/dbip-city-lite-2025-05.mmdb
     entrypoint:
     - /bin/bash
     - '-c'

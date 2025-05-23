@@ -48,10 +48,8 @@
             </row>
         </form>
 
-        <!-- Form which defines the first page/section of the "traditional" DSpace submission process,
-             often used when depositing normal Items (i.e. Items which are not Entities). -->
         <form name="traditionalpageone">
-        <row>
+            <row>
                 <field>
                     <dc-schema>dc</dc-schema>
                     <dc-element>type</dc-element>
@@ -202,7 +200,6 @@
                     <dc-schema>dc</dc-schema>
                     <dc-element>subject</dc-element>
                     <dc-qualifier></dc-qualifier>
-                    <!-- An input-type of tag MUST be marked as repeatable -->
                     <repeatable>true</repeatable>
                     <label>Assunto</label>
                     <!-- <input-type>tag</input-type> -->
