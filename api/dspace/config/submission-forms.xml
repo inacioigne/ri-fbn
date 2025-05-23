@@ -174,12 +174,6 @@
                 </field>
             </row>
         </form>
-
-
-        <!-- Form which defines the *first* metadata page/section for depositing Publication Entities.
-             Since Publication Entities are very similar to normal Items, this is nearly identical to the
-             'traditionalpageone' form. The only difference is the Author field can be used to link the
-             Publication Entity to a Person Entity. -->
         <form name="publicationStep">
             <row>
                 <relation-field>
@@ -325,7 +319,7 @@
 
         <!-- Form which defines the metadata page/section for depositing Person Entities -->
         <form name="personStep">
-            <row>
+            <!-- <row>
                 <relation-field>
                     <relationship-type>isPublicationOfAuthor</relationship-type>
                     <search-configuration>publication</search-configuration>
@@ -333,7 +327,7 @@
                     <hint>import a publicaton</hint>
                     <externalsources>pubmed</externalsources>
                 </relation-field>
-            </row>
+            </row> -->
             <row>
                 <field>
                     <dc-schema>person</dc-schema>
@@ -380,16 +374,16 @@
                     <hint>Enter the birth date of the person</hint>
                 </field>
             </row>
-<!--            <row>-->
-<!--                <field>-->
-<!--                    <dc-schema>person</dc-schema>-->
-<!--                    <dc-element>identifier</dc-element>-->
-<!--                    <dc-qualifier>staffid</dc-qualifier>-->
-<!--                    <label>Staff ID</label>-->
-<!--                    <input-type>onebox</input-type>-->
-<!--                    <hint>Enter the staff id of the person</hint>-->
-<!--                </field>-->
-<!--            </row>-->
+            <row>
+                <field>
+                    <dc-schema>person</dc-schema>
+                    <dc-element>identifier</dc-element>
+                    <dc-qualifier>staffid</dc-qualifier>
+                    <label>Staff ID</label>
+                    <input-type>onebox</input-type>
+                    <hint>Enter the staff id of the person</hint>
+                </field>
+            </row>
             <row>
                 <field>
                     <dc-schema>person</dc-schema>
@@ -421,36 +415,6 @@
                     <hint>Enter the id of the project</hint>
                 </field>
             </row>
-<!--            <row>-->
-<!--                <field>-->
-<!--                    <dc-schema>project</dc-schema>-->
-<!--                    <dc-element>identifier</dc-element>-->
-<!--                    <dc-qualifier>status</dc-qualifier>-->
-<!--                    <label>Status</label>-->
-<!--                    <input-type value-pairs-name="project_status">dropdown</input-type>-->
-<!--                    <hint>Enter the status of the project</hint>-->
-<!--                </field>-->
-<!--            </row>-->
-<!--            <row>-->
-<!--                <field>-->
-<!--                    <dc-schema>project</dc-schema>-->
-<!--                    <dc-element>identifier</dc-element>-->
-<!--                    <dc-qualifier>startdate</dc-qualifier>-->
-<!--                    <label>Start date</label>-->
-<!--                    <input-type>date</input-type>-->
-<!--                    <hint>Enter the start date of the project</hint>-->
-<!--                </field>-->
-<!--            </row>-->
-<!--            <row>-->
-<!--                <field>-->
-<!--                    <dc-schema>project</dc-schema>-->
-<!--                    <dc-element>identifier</dc-element>-->
-<!--                    <dc-qualifier>expectedcompletion</dc-qualifier>-->
-<!--                    <label>Expected Completion</label>-->
-<!--                    <input-type>date</input-type>-->
-<!--                    <hint>Enter the expected completion date of the project</hint>-->
-<!--                </field>-->
-<!--            </row>-->
             <row>
                 <relation-field>
                     <relationship-type>isPersonOfProject</relationship-type>
@@ -1263,20 +1227,6 @@
         </form>
 
     </form-definitions>
-
-
-    <!-- form-value-pairs populate dropdown and qualdrop-value lists.          -->
-    <!-- The form-value-pairs element holds child elements named 'value-pairs' -->
-    <!-- A 'value-pairs' element has a value-pairs-name and a dc-term          -->
-    <!-- attribute. The dc-term attribute specifies which to which Dublin Core -->
-    <!-- Term this set of value-pairs applies.                                 -->
-    <!--     Current dc-terms are: identifier-pairs, type-pairs, and           -->
-    <!--     language_iso-pairs. The name attribute matches a name             -->
-    <!--     in the form-map, above.                                           -->
-    <!-- A value-pair contains one 'pair' for each value displayed in the list -->
-    <!-- Each pair contains a 'displayed-value' element and a 'stored-value'   -->
-    <!-- element. A UI list displays the displayed-values, but the program     -->
-    <!-- stores the associated stored-values in the database.                  -->
 
     <form-value-pairs>
         <value-pairs value-pairs-name="common_types" dc-term="type">
