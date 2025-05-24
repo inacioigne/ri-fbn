@@ -8,7 +8,8 @@ services:
      image: fbn/dspace-ui:${DSPACE_VERSION}-dist
      build: 
        context: .
-       dockerfile: ./ui-dist.dockerfile
+       dockerfile: ui.dockerfile
+      #  dockerfile: ./ui-dist.dockerfile
      env_file:
        - .env
      environment:
