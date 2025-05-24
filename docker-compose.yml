@@ -14,6 +14,7 @@ services:
        - .env
      environment:
       - NODE_ENV=production
+      - DSPACE_REST_NAMESPACE=https://ri.fbnovas.edu.br/server
      networks:
        - dockernet
      ports:
