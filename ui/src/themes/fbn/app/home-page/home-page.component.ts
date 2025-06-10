@@ -99,7 +99,7 @@ export class HomePageComponent extends BaseComponent {
       title: 'Produção de Docentes'
     },
     {
-      link: ' /communities/7e9182de-4ae1-4731-96e1-5dbbc70771ab',
+      link: '/communities/7e9182de-4ae1-4731-96e1-5dbbc70771ab',
       image: 'assets/fbn/images/collections/eventos.png',
       title: 'Publicações em Eventos'
     },
