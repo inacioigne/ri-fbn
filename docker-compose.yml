@@ -1,59 +1,43 @@
 networks:
-  dockernet:
-
+  dspacenet:
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
 services:
-  # Dspace UI
-  ui:
-     container_name: dspace-ui
-     image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace-angular:${DSPACE_VER:-dspace-8_x}-dist" 
-    #  image: fbn/dspace-ui:${DSPACE_VERSION}-dist
-     build: 
-       context: .
-      #  dockerfile: ui.dockerfile
-       dockerfile: ./ui-dist.dockerfile
-     env_file:
-       - .env
-     environment:
-      - NODE_ENV=production
-      - DSPACE_REST_SSL=true
-      - DSPACE_REST_HOST=ri.fbnovas.edu.br
-      - DSPACE_REST_PORT=443
-      - DSPACE_REST_NAMESPACE=/server
-     networks:
-       - dockernet
-     ports:
-     - published: 4000
-       target: 4000
-     stdin_open: true
-     tty: true
-     restart: unless-stopped    
-  # Dspace API
+  # DSpace (backend) webapp container
   api:
     env_file:
       - .env
-    container_name: dspace-api      
+    container_name: dspace-api
+    environment:
+      matomo__P__tracker__P__url: http://matomo
     image: fbn/dspace-api:${DSPACE_VERSION}
-    build: 
+    build:
       context: .
       dockerfile: api.dockerfile
-    
     depends_on:
-      - dspacedb
-      - dspacesolr
+    - dspacedb
+    - dspacesolr
     networks:
-      - dockernet
+      - dspacenet
     ports:
-      - published: 8080
-        target: 8080
-      - published: 8000
-        target: 8000
+    - published: 8080
+      target: 8080
+    - published: 8000
+      target: 8000
     stdin_open: true
     tty: true
     restart: unless-stopped
     volumes:
+    # Keep DSpace assetstore directory between reboots
     - assetstore:/dspace/assetstore
+    # Mount local [src]/dspace/config/ to container. This syncs your local configs with container
+    # NOTE: Environment variables specified above will OVERRIDE any configs in local.cfg or dspace.cfg
     - ./api/dspace/config:/dspace/config
-    - /home/fbn/dbip-city-lite-2025-05.mmdb:/dspace/dbip-city-lite-2025-05.mmdb
+    # Ensure that the database is ready BEFORE starting tomcat
+    # 1. While a TCP connection to dspacedb port 5432 is not available, continue to sleep
+    # 2. Then, run database migration to init database tables
+    # 3. Finally, start DSpace
     entrypoint:
     - /bin/bash
     - '-c'
@@ -61,56 +45,61 @@ services:
       while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
       /dspace/bin/dspace database migrate
       java -jar /dspace/webapps/server-boot.jar --dspace.dir=/dspace
-
-  # Banco de Dados
+  # DSpace PostgreSQL database container
   dspacedb:
     container_name: dspacedb
+    # Uses a custom Postgres image with pgcrypto installed
     image: fbn/dspacedb:${DSPACE_VERSION}
     env_file:
       - .env
-    build: 
-     context: ./docker/db/
-     args:
-      POSTGRES_VERSION: ${POSTGRES_VERSION}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    
+    build:
+      # Must build out of subdirectory to have access to install script for pgcrypto
+      context: ./docker/db/
     networks:
-      dockernet:
+      dspacenet:
     ports:
-      - published: 5432
-        target: 5432
+    - published: 5432
+      target: 5432
     stdin_open: true
     tty: true
     restart: unless-stopped
     volumes:
-      - pgdata:/pgdata
+    # Keep Postgres data directory between reboots
+    - pgdata:/pgdata
 
-  # DSpace Solr
+  # DSpace Solr container
   dspacesolr:
     container_name: dspacesolr
     image: fbn/dspacesolr:${DSPACE_VERSION}
     env_file:
       - .env
     build:
-      context: ./docker/solr/
-      additional_contexts: 
-        solrconfigs: ./api/dspace/solr
+      context: ./dspace/src/main/docker/dspace-solr/
+      # Provide path to Solr configs necessary to build Docker image
+      additional_contexts:
+        solrconfigs: ./dspace/solr/
       args:
-        SOLR_VERSION: ${SOLR_VERSION}
-    
+        SOLR_VERSION: "${SOLR_VER:-9.8}"
     networks:
-      dockernet:
+      dspacenet:
     ports:
-      - published: 8983
-        target: 8983
+    - published: 8983
+      target: 8983
     stdin_open: true
     tty: true
-    restart: unless-stopped
     working_dir: /var/solr/data
     volumes:
-      - solr_data:/var/solr/data
+    # Keep Solr data directory between reboots
+    - solr_data:/var/solr/data
+    # NOTE: We are not running Solr as "root", but we need root permissions to copy our cores to the mounted
+    # /var/solr/data directory. Then we start Solr as the "solr" user.
+    user: root
+    # Initialize all DSpace Solr cores then start Solr:
+    # * First, run precreate-core to create the core (if it doesn't yet exist). If exists already, this is a no-op
+    # * Second, copy configsets to this core:
+    #   Updates to Solr configs require the container to be rebuilt/restarted: `docker compose -p d7 up -d --build dspacesolr`
+    # * Third, ensure all new folders are owned by "solr" user
+    # * Finally, start Solr as the "solr" user via the provided solr-foreground script
     entrypoint:
     - /bin/bash
     - '-c'
@@ -128,9 +117,9 @@ services:
       cp -r /opt/solr/server/solr/configsets/qaevent/* qaevent
       precreate-core suggestion /opt/solr/server/solr/configsets/suggestion
       cp -r /opt/solr/server/solr/configsets/suggestion/* suggestion
-      exec solr -f
-
+      chown -R solr:solr /var/solr
+      runuser -u solr -- solr-foreground
 volumes:
   assetstore:
   pgdata:
-  solr_data: 
+  solr_data:

@@ -4,4 +4,5 @@ old_docs
 /dist
 /dist.tar.gz
 /docker/db/Dockerfile
-/dspace-angular-dspace-8.1
+/api-v8.1
+

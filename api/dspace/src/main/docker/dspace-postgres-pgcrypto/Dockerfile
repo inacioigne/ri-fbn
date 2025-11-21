@@ -10,8 +10,8 @@
 # docker build --build-arg POSTGRES_VERSION=13 --build-arg POSTGRES_PASSWORD=mypass ./dspace/src/main/docker/dspace-postgres-pgcrypto/
 # This will be published as dspace/dspace-postgres-pgcrypto:$DSPACE_VERSION
 
-# ARG POSTGRES_VERSION=15
-# ARG POSTGRES_PASSWORD=dspace
+ARG POSTGRES_VERSION=15
+ARG POSTGRES_PASSWORD=dspace
 
 FROM docker.io/postgres:${POSTGRES_VERSION}
 
