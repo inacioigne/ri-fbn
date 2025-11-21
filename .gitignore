@@ -1,8 +1,9 @@
 .env
 .env_prod
 old_docs
-/dist
-/dist.tar.gz
+/ui/dist
+/ui/dist.tar.gz
 /docker/db/Dockerfile
-/api-v8.1
+/v8.1-api
+/v8.1-ui
 
