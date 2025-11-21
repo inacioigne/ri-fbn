@@ -74,12 +74,12 @@ services:
     env_file:
       - .env
     build:
-      context: ./dspace/src/main/docker/dspace-solr/
+      context: ./docker/solr/
       # Provide path to Solr configs necessary to build Docker image
       additional_contexts:
-        solrconfigs: ./dspace/solr/
+        solrconfigs: ./api/dspace/solr
       args:
-        SOLR_VERSION: "${SOLR_VER:-9.8}"
+        SOLR_VERSION:  ${SOLR_VERSION}
     networks:
       dspacenet:
     ports:
