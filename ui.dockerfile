@@ -1,28 +1,25 @@
 FROM docker.io/node:18-alpine AS build
 
-RUN apk add --update python3 make g++ \
-    && rm -rf /var/cache/apk/*
+# Ensure Python and other build tools are available
+# These are needed to install some node modules, especially on linux/arm64
+RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
 WORKDIR /app
-COPY ./ui/package.json ./
-RUN yarn install --network-timeout 300000
+COPY ui/package.json ui/package-lock.json ./
+RUN npm install
 
-ADD ./ui /app/
-ENV NODE_OPTIONS="--max_old_space_size=4096"
-RUN yarn build:prod
+ADD . /app/
+RUN npm run build:prod
 
 FROM node:18-alpine
 RUN npm install --global pm2
 
 COPY --chown=node:node --from=build /app/dist /app/dist
-COPY --chown=node:node ui/config /app/config
-COPY --chown=node:node ui/docker/dspace-ui.json /app/dspace-ui.json
+COPY --chown=node:node config /app/config
+COPY --chown=node:node docker/dspace-ui.json /app/dspace-ui.json
 
 WORKDIR /app
 USER node
-ENV NODE_OPTIONS="--max_old_space_size=4096"
-
-
-ENV NODE_ENV production
+ENV NODE_ENV=production
 EXPOSE 4000
 CMD pm2-runtime start dspace-ui.json --json
