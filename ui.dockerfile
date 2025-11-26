@@ -4,7 +4,7 @@ RUN apk add --update python3 make g++ \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /app
-COPY /ui/package.json /ui/yarn.lock ./
+COPY ./ui/package.json ./ui/yarn.lock ./
 RUN yarn install --network-timeout 300000
 
 ADD ./ui /app/
