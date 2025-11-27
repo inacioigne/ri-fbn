@@ -15,11 +15,13 @@ services:
      env_file:
        - .env
      environment:
+      TZ: America/Manaus
       - NODE_ENV=production
       - DSPACE_REST_SSL=true
       - DSPACE_REST_HOST=ri.fbnovas.edu.br
       - DSPACE_REST_PORT=443
       - DSPACE_REST_NAMESPACE=/server
+        
      networks:
        - dspacenet
      ports:
@@ -35,6 +37,7 @@ services:
       - .env
     container_name: dspace-api
     environment:
+      TZ: America/Manaus
       matomo__P__tracker__P__url: http://matomo
     image: fbn/dspace-api:${DSPACE_VERSION}
     build:
@@ -76,6 +79,8 @@ services:
     container_name: dspacedb
     # Uses a custom Postgres image with pgcrypto installed
     image: fbn/dspacedb:${DSPACE_VERSION}
+    environment:
+      TZ: America/Manaus
     env_file:
       - .env
     build:
@@ -97,6 +102,8 @@ services:
   dspacesolr:
     container_name: dspacesolr
     image: fbn/dspacesolr:${DSPACE_VERSION}
+    environment:
+      TZ: America/Manaus
     env_file:
       - .env
     build:
