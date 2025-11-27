@@ -15,7 +15,7 @@ services:
      env_file:
        - .env
      environment:
-      TZ: America/Manaus
+      - TZ: America/Manaus
       - NODE_ENV=production
       - DSPACE_REST_SSL=true
       - DSPACE_REST_HOST=ri.fbnovas.edu.br
