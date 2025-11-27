@@ -1,4 +1,9 @@
 FROM node:18-alpine
+
+RUN apk add --no-cache tzdata \
+    && cp /usr/share/zoneinfo/America/Manaus /etc/localtime \
+    && echo "America/Manaus" > /etc/timezone
+    
 RUN npm install --global pm2
 
 COPY --chown=node:node ui/dist /app/dist
