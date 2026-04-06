@@ -6,4 +6,5 @@ old_docs
 /docker/db/Dockerfile
 /v8.1-api
 /v8.1-ui
+/dist
 
