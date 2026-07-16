@@ -98,7 +98,7 @@ services:
     container_name: fbn-solr
     env_file:
       - .env
-    image: "fdv/dspace-solr:${DSPACE_VERSION}"
+    image: "fbn/dspace-solr:${DSPACE_VERSION}"
     build:
       context: ./api/dspace/src/main/docker/dspace-solr/
       additional_contexts:
