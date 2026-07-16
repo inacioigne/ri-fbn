@@ -150,7 +150,7 @@ public abstract class DSpaceRestRepository<T extends RestAddressableModel, ID ex
     @Override
     /**
      * Return true if an object exist for the specified ID. The default implementation is inefficient as it retrieves
-     * the actual object to state that it exists. This could lead to retrieve and inizialize lot of linked objects
+     * the actual object to state that it exists. This could lead to retrieve and initialize lot of linked objects
      */
     public boolean existsById(ID id) {
         return findById(id).isPresent();
@@ -417,7 +417,7 @@ public abstract class DSpaceRestRepository<T extends RestAddressableModel, ID ex
      */
     public T upload(HttpServletRequest request, String apiCategory, String model,
                                                      ID id, MultipartFile file)
-             throws SQLException, FileNotFoundException, IOException, AuthorizeException {
+        throws SQLException, AuthorizeException, IOException {
         throw new RuntimeException("No implementation found; Method not allowed!");
     }
 
