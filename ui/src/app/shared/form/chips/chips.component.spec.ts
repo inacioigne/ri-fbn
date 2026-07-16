@@ -1,8 +1,5 @@
 // Load the implementations that should be tested
-import {
-  CommonModule,
-  NgIf,
-} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -17,13 +14,13 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { ConfidenceType } from '@dspace/core/shared/confidence-type';
+import { FormFieldMetadataValueObject } from '@dspace/core/shared/form/models/form-field-metadata-value.model';
+import { createTestComponent } from '@dspace/core/testing/utils.test';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { environment } from '../../../../environments/environment';
-import { ConfidenceType } from '../../../core/shared/confidence-type';
-import { createTestComponent } from '../../testing/utils.test';
-import { FormFieldMetadataValueObject } from '../builder/models/form-field-metadata-value.model';
 import { AuthorityConfidenceStateDirective } from '../directives/authority-confidence-state.directive';
 import { ChipsComponent } from './chips.component';
 import { Chips } from './models/chips.model';
@@ -62,11 +59,12 @@ describe('ChipsComponent test suite', () => {
     // synchronous beforeEach
     beforeEach(() => {
       html = `
-      <ds-chips
-        *ngIf="chips.hasItems()"
-        [chips]="chips"
-        [editable]="editable"
-        (selected)="onChipSelected($event)"></ds-chips>`;
+        @if(chips.hasItems()) {
+          <ds-chips
+            [chips]="chips"
+            [editable]="editable"
+            (selected)="onChipSelected($event)"></ds-chips>
+        }`;
 
       testFixture = createTestComponent(html, TestComponent) as ComponentFixture<TestComponent>;
       testComp = testFixture.componentInstance;
@@ -143,9 +141,9 @@ describe('ChipsComponent test suite', () => {
 
     it('should update chips item order when drag and drop end', fakeAsync(() => {
       spyOn(chipsComp.chips, 'updateOrder');
-      const de = chipsFixture.debugElement.query(By.css('div[role="listitem"]'));
+      const de = chipsFixture.debugElement.query(By.css('div[role="list"]'));
 
-      de.triggerEventHandler('cdkDropListDropped', { previousIndex: 0, currentIndex: 1, previousContainer: { data: { index: 0 } }, container: { data: { index: 1 } } });
+      de.triggerEventHandler('cdkDropListDropped', { previousIndex: 0, currentIndex: 1 });
 
       expect(chipsComp.dragged).toBe(-1);
       expect(chipsComp.chips.updateOrder).toHaveBeenCalled();
@@ -155,8 +153,8 @@ describe('ChipsComponent test suite', () => {
   describe('when has items as object', () => {
     beforeEach(() => {
       const item = {
-        mainField: new FormFieldMetadataValueObject('main test', null, 'test001', 'main test', 0, ConfidenceType.CF_ACCEPTED),
-        relatedField: new FormFieldMetadataValueObject('related test', null, 'test002', 'related test', 0, ConfidenceType.CF_ACCEPTED),
+        mainField: new FormFieldMetadataValueObject('main test', null, null, 'test001', 'main test', 0, ConfidenceType.CF_ACCEPTED),
+        relatedField: new FormFieldMetadataValueObject('related test', null, null, 'test002', 'related test', 0, ConfidenceType.CF_ACCEPTED),
         otherRelatedField: new FormFieldMetadataValueObject('other related test'),
       };
 
@@ -192,8 +190,9 @@ describe('ChipsComponent test suite', () => {
 @Component({
   selector: 'ds-test-cmp',
   template: ``,
-  standalone: true,
-  imports: [NgbModule, NgIf],
+  imports: [
+    NgbModule,
+  ],
 })
 class TestComponent {
 

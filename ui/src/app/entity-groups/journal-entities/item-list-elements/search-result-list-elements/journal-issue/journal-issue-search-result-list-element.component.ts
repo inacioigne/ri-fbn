@@ -1,13 +1,12 @@
 import {
   AsyncPipe,
   NgClass,
-  NgFor,
-  NgIf,
 } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ViewMode } from '@dspace/core/shared/view-mode.model';
 
-import { ViewMode } from '../../../../../core/shared/view-mode.model';
+import { MetadataDirective } from '../../../../../shared/metadata.directive';
 import { ThemedBadgesComponent } from '../../../../../shared/object-collection/shared/badges/themed-badges.component';
 import { listableObjectComponent } from '../../../../../shared/object-collection/shared/listable-object/listable-object.decorator';
 import { ItemSearchResultListElementComponent } from '../../../../../shared/object-list/search-result-list-element/item-search-result/item-types/item/item-search-result-list-element.component';
@@ -20,8 +19,16 @@ import { ThemedThumbnailComponent } from '../../../../../thumbnail/themed-thumbn
   selector: 'ds-journal-issue-search-result-list-element',
   styleUrls: ['./journal-issue-search-result-list-element.component.scss'],
   templateUrl: './journal-issue-search-result-list-element.component.html',
-  standalone: true,
-  imports: [NgIf, RouterLink, ThemedThumbnailComponent, NgClass, ThemedBadgesComponent, TruncatableComponent, TruncatablePartComponent, NgFor, AsyncPipe],
+  imports: [
+    AsyncPipe,
+    MetadataDirective,
+    NgClass,
+    RouterLink,
+    ThemedBadgesComponent,
+    ThemedThumbnailComponent,
+    TruncatableComponent,
+    TruncatablePartComponent,
+  ],
 })
 /**
  * The component for displaying a list element for an item search result of the type Journal Issue

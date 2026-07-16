@@ -2,6 +2,7 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
+import { hasNoValue } from '@dspace/shared/utils/empty.util';
 import { TranslateService } from '@ngx-translate/core';
 import {
   cold,
@@ -11,22 +12,21 @@ import {
 import { Observable } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
-import { hasNoValue } from '../../shared/empty.util';
-import { getMockRequestService } from '../../shared/mocks/request.service.mock';
-import { getMockTranslateService } from '../../shared/mocks/translate.service.mock';
-import {
-  createFailedRemoteDataObject$,
-  createSuccessfulRemoteDataObject,
-  createSuccessfulRemoteDataObject$,
-} from '../../shared/remote-data.utils';
-import { HALEndpointServiceStub } from '../../shared/testing/hal-endpoint-service.stub';
-import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
-import { ObjectCacheServiceStub } from '../../shared/testing/object-cache-service.stub';
 import { RemoteDataBuildService } from '../cache/builders/remote-data-build.service';
 import { ObjectCacheService } from '../cache/object-cache.service';
 import { Collection } from '../shared/collection.model';
 import { ContentSource } from '../shared/content-source.model';
 import { PageInfo } from '../shared/page-info.model';
+import { HALEndpointServiceStub } from '../testing/hal-endpoint-service.stub';
+import { NotificationsServiceStub } from '../testing/notifications-service.stub';
+import { ObjectCacheServiceStub } from '../testing/object-cache-service.stub';
+import { getMockRequestService } from '../testing/request.service.mock';
+import { getMockTranslateService } from '../testing/translate.service.mock';
+import {
+  createFailedRemoteDataObject$,
+  createSuccessfulRemoteDataObject,
+  createSuccessfulRemoteDataObject$,
+} from '../utilities/remote-data.utils';
 import { testCreateDataImplementation } from './base/create-data.spec';
 import { testDeleteDataImplementation } from './base/delete-data.spec';
 import { testFindAllDataImplementation } from './base/find-all-data.spec';
@@ -151,7 +151,7 @@ describe('CollectionDataService', () => {
         expect(service.getAuthorizedCollection).toHaveBeenCalledWith(queryString);
       });
 
-      it('should return a RemoteData<PaginatedList<Colletion>> for the getAuthorizedCollection', () => {
+      it('should return a RemoteData<PaginatedList<Collection>> for the getAuthorizedCollection', () => {
         const result = service.getAuthorizedCollection(queryString);
         const expected = cold('a|', {
           a: paginatedListRD,
@@ -166,7 +166,7 @@ describe('CollectionDataService', () => {
         expect(service.getAuthorizedCollectionByCommunity).toHaveBeenCalledWith(communityId, queryString);
       });
 
-      it('should return a RemoteData<PaginatedList<Colletion>> for the getAuthorizedCollectionByCommunity', () => {
+      it('should return a RemoteData<PaginatedList<Collection>> for the getAuthorizedCollectionByCommunity', () => {
         const result = service.getAuthorizedCollectionByCommunity(communityId, queryString);
         const expected = cold('a|', {
           a: paginatedListRD,
@@ -206,12 +206,12 @@ describe('CollectionDataService', () => {
 
   /**
    * Create a CollectionDataService used for testing
-   * @param reponse$   Supply a RemoteData to be returned by the REST API (optional)
+   * @param response$   Supply a RemoteData to be returned by the REST API (optional)
    */
-  function createService(reponse$?: Observable<RemoteData<any>>) {
+  function createService(response$?: Observable<RemoteData<any>>) {
     requestService = getMockRequestService();
-    let buildResponse$ = reponse$;
-    if (hasNoValue(reponse$)) {
+    let buildResponse$ = response$;
+    if (hasNoValue(response$)) {
       buildResponse$ = createSuccessfulRemoteDataObject$({});
     }
     rdbService = jasmine.createSpyObj('rdbService', {

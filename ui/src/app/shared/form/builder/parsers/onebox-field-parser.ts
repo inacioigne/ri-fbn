@@ -1,9 +1,11 @@
+import { FormFieldMetadataValueObject } from '@dspace/core/shared/form/models/form-field-metadata-value.model';
+import { isNotEmpty } from '@dspace/shared/utils/empty.util';
 import {
   DynamicSelectModel,
   DynamicSelectModelConfig,
 } from '@ng-dynamic-forms/core';
 
-import { isNotEmpty } from '../../../empty.util';
+import { environment } from '../../../../../environments/environment';
 import {
   DsDynamicInputModel,
   DsDynamicInputModelConfig,
@@ -19,7 +21,6 @@ import {
   DsDynamicOneboxModelConfig,
   DynamicOneboxModel,
 } from '../ds-dynamic-form-ui/models/onebox/dynamic-onebox.model';
-import { FormFieldMetadataValueObject } from '../models/form-field-metadata-value.model';
 import { FieldParser } from './field-parser';
 
 export class OneboxFieldParser extends FieldParser {
@@ -29,7 +30,7 @@ export class OneboxFieldParser extends FieldParser {
       // Case Qualdrop Model
       const clsGroup = {
         element: {
-          control: 'form-row',
+          control: 'row',
           hint: 'ds-form-qualdrop-hint',
         },
       };
@@ -39,7 +40,7 @@ export class OneboxFieldParser extends FieldParser {
           control: 'ds-form-input-addon custom-select',
         },
         grid: {
-          host: 'col-sm-4 pr-0',
+          host: 'col-sm-4 pe-0',
         },
       };
 
@@ -48,7 +49,7 @@ export class OneboxFieldParser extends FieldParser {
           control: 'ds-form-input-value',
         },
         grid: {
-          host: 'col-sm-8 pl-0',
+          host: 'col-sm-8 ps-0',
         },
       };
 
@@ -77,19 +78,20 @@ export class OneboxFieldParser extends FieldParser {
       }
       selectModelConfig.disabled = inputModelConfig.readOnly;
       inputSelectGroup.readOnly = selectModelConfig.disabled && inputModelConfig.readOnly;
-
+      inputSelectGroup.language = inputModelConfig.language;
       inputSelectGroup.group.push(new DynamicSelectModel(selectModelConfig, clsSelect));
       inputSelectGroup.group.push(new DsDynamicInputModel(inputModelConfig, clsInput));
 
       return new DynamicQualdropModel(inputSelectGroup, clsGroup);
     } else if (this.configData.selectableMetadata[0].controlledVocabulary) {
       const oneboxModelConfig: DsDynamicOneboxModelConfig = this.initModel(null, label);
-      this.setVocabularyOptions(oneboxModelConfig);
+      this.setVocabularyOptions(oneboxModelConfig, this.parserOptions.collectionUUID);
       this.setValues(oneboxModelConfig, fieldValue, true);
 
       return new DynamicOneboxModel(oneboxModelConfig);
     } else {
       const inputModelConfig: DsDynamicInputModelConfig = this.initModel(null, label);
+      inputModelConfig.spellCheck = environment.form.spellCheck;
       this.setValues(inputModelConfig, fieldValue);
 
       return new DsDynamicInputModel(inputModelConfig);

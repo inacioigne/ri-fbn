@@ -1,3 +1,5 @@
+import { ActionType } from '@dspace/core/resource-policy/models/action-type.model';
+import { PolicyType } from '@dspace/core/resource-policy/models/policy-type.model';
 import {
   DynamicDatePickerModelConfig,
   DynamicFormControlLayout,
@@ -6,8 +8,6 @@ import {
   DynamicSelectModelConfig,
 } from '@ng-dynamic-forms/core';
 
-import { ActionType } from '../../../core/resource-policy/models/action-type.model';
-import { PolicyType } from '../../../core/resource-policy/models/policy-type.model';
 import { DsDynamicInputModelConfig } from '../../form/builder/ds-dynamic-form-ui/models/ds-dynamic-input.model';
 import { DsDynamicTextAreaModelConfig } from '../../form/builder/ds-dynamic-form-ui/models/ds-dynamic-textarea.model';
 
@@ -40,6 +40,10 @@ const policyActionList: DynamicFormOptionConfig<any>[] = [
     value: ActionType.WRITE,
   },
   {
+    label: ActionType.ADD.toString(),
+    value: ActionType.ADD,
+  },
+  {
     label: ActionType.REMOVE.toString(),
     value: ActionType.REMOVE,
   },
@@ -48,7 +52,7 @@ const policyActionList: DynamicFormOptionConfig<any>[] = [
     value: ActionType.ADMIN,
   },
   {
-    label: ActionType.DELETE.toString(),
+    label: 'DELETE',
     value: ActionType.DELETE,
   },
   {
@@ -118,7 +122,7 @@ export const RESOURCE_POLICY_FORM_DATE_GROUP_CONFIG: DynamicFormGroupModelConfig
 };
 export const RESOURCE_POLICY_FORM_DATE_GROUP_LAYOUT: DynamicFormControlLayout = {
   element: {
-    control: 'form-row',
+    control: 'row',
   },
 };
 

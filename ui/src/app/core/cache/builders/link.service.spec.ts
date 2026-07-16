@@ -5,12 +5,12 @@ import {
   take,
 } from 'rxjs/operators';
 
-import { APP_DATA_SERVICES_MAP } from '../../../../config/app-config.interface';
-import { TestDataService } from '../../../shared/testing/test-data-service.mock';
-import { followLink } from '../../../shared/utils/follow-link-config.model';
+import { APP_DATA_SERVICES_MAP } from '../../data-services-map-type';
+import { followLink } from '../../shared/follow-link-config.model';
 import { HALLink } from '../../shared/hal-link.model';
 import { HALResource } from '../../shared/hal-resource.model';
 import { ResourceType } from '../../shared/resource-type';
+import { TestDataService } from '../../testing/test-data-service.mock';
 import {
   LINK_DEFINITION_FACTORY,
   LINK_DEFINITION_MAP_FACTORY,
@@ -31,14 +31,16 @@ class TestModel implements HALResource {
     self: HALLink;
     predecessor: HALLink;
     successor: HALLink;
+    standardLinkName: HALLink;
   };
 
   predecessor?: TestModel;
   successor?: TestModel;
+  renamedProperty?: TestModel;
 }
 
 const mockDataServiceMap: any = new Map([
-  [TEST_MODEL.value, () => import('../../../shared/testing/test-data-service.mock').then(m => m.TestDataService)],
+  [TEST_MODEL.value, () => import('../../testing/test-data-service.mock').then(m => m.TestDataService)],
 ]);
 
 let testDataService: TestDataService;
@@ -66,6 +68,24 @@ describe('LinkService', () => {
     testDataService = new TestDataService();
     spyOn(testDataService, 'findListByHref').and.callThrough();
     spyOn(testDataService, 'findByHref').and.callThrough();
+
+    const linksDefinitions = new Map();
+    linksDefinitions.set('predecessor', {
+      resourceType: TEST_MODEL,
+      linkName: 'predecessor',
+      propertyName: 'predecessor',
+    });
+    linksDefinitions.set('successor', {
+      resourceType: TEST_MODEL,
+      linkName: 'successor',
+      propertyName: 'successor',
+    });
+    linksDefinitions.set('standardLinkName', {
+      resourceType: TEST_MODEL,
+      linkName: 'standardLinkName',
+      propertyName: 'renamedProperty',
+    });
+
     TestBed.configureTestingModule({
       providers: [
         LinkService,
@@ -87,18 +107,7 @@ describe('LinkService', () => {
         },
         {
           provide: LINK_DEFINITION_MAP_FACTORY,
-          useValue: jasmine.createSpy('getLinkDefinitions').and.returnValue([
-            {
-              resourceType: TEST_MODEL,
-              linkName: 'predecessor',
-              propertyName: 'predecessor',
-            },
-            {
-              resourceType: TEST_MODEL,
-              linkName: 'successor',
-              propertyName: 'successor',
-            },
-          ]),
+          useValue: jasmine.createSpy('getLinkDefinitions').and.returnValue(linksDefinitions),
         },
       ],
     });
@@ -115,6 +124,15 @@ describe('LinkService', () => {
           expect(testDataService.findByHref).toHaveBeenCalledWith(testModel._links.predecessor.href, true, true, followLink('successor'));
           done();
         });
+      });
+    });
+    describe(`when the propertyName is different than linkName`, () => {
+      beforeEach(() => {
+        result = service.resolveLink(testModel, followLink('standardLinkName', {}));
+      });
+      it('link should be assign to custom property', () => {
+        expect(result.renamedProperty).toBeDefined();
+        expect(result.standardLinkName).toBeUndefined();
       });
     });
     describe(`when the linkdefinition concerns a list`, () => {

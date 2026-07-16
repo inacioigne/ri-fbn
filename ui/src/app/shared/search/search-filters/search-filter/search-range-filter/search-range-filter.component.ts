@@ -1,8 +1,6 @@
 import {
   AsyncPipe,
   isPlatformBrowser,
-  NgFor,
-  NgIf,
 } from '@angular/common';
 import {
   Component,
@@ -12,6 +10,10 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RemoteDataBuildService } from '@dspace/core/cache/builders/remote-data-build.service';
+import { RouteService } from '@dspace/core/services/route.service';
+import { yearFromString } from '@dspace/shared/utils/date.util';
+import { hasValue } from '@dspace/shared/utils/empty.util';
 import {
   TranslateModule,
   TranslateService,
@@ -22,16 +24,12 @@ import {
   map,
   startWith,
 } from 'rxjs/operators';
-import { yearFromString } from 'src/app/shared/date.util';
 
-import { RemoteDataBuildService } from '../../../../../core/cache/builders/remote-data-build.service';
-import { RouteService } from '../../../../../core/services/route.service';
-import { SearchService } from '../../../../../core/shared/search/search.service';
-import { SearchConfigurationService } from '../../../../../core/shared/search/search-configuration.service';
-import { SearchFilterService } from '../../../../../core/shared/search/search-filter.service';
 import { SEARCH_CONFIG_SERVICE } from '../../../../../my-dspace-page/my-dspace-configuration.service';
-import { hasValue } from '../../../../empty.util';
 import { DebounceDirective } from '../../../../utils/debounce.directive';
+import { SearchService } from '../../../search.service';
+import { SearchConfigurationService } from '../../../search-configuration.service';
+import { SearchFilterService } from '../../search-filter.service';
 import {
   facetLoad,
   SearchFacetFilterComponent,
@@ -52,8 +50,14 @@ import {
   styleUrls: ['./search-range-filter.component.scss'],
   templateUrl: './search-range-filter.component.html',
   animations: [facetLoad],
-  standalone: true,
-  imports: [FormsModule, NgIf, NouisliderComponent, DebounceDirective, NgFor, SearchFacetRangeOptionComponent, AsyncPipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    DebounceDirective,
+    FormsModule,
+    NouisliderComponent,
+    SearchFacetRangeOptionComponent,
+    TranslateModule,
+  ],
 })
 
 /**
@@ -98,7 +102,7 @@ export class SearchRangeFilterComponent extends SearchFacetFilterComponent imple
 
   /**
    * Whether the sider is being controlled by the keyboard.
-   * Supresses any changes until the key is released.
+   * Suppresses any changes until the key is released.
    */
   keyboardControl: boolean;
 

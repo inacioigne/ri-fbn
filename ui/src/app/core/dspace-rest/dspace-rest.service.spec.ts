@@ -1,17 +1,19 @@
 import {
   HttpErrorResponse,
   HttpHeaders,
+  provideHttpClient,
+  withInterceptorsFromDi,
 } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import {
   inject,
   TestBed,
 } from '@angular/core/testing';
+import { RestRequestMethod } from '@dspace/config/rest-request-method';
 
-import { RestRequestMethod } from '../data/rest-request-method';
 import { DSpaceObject } from '../shared/dspace-object.model';
 import {
   DEFAULT_CONTENT_TYPE,
@@ -33,8 +35,12 @@ describe('DspaceRestService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [DspaceRestService],
+      imports: [],
+      providers: [
+        DspaceRestService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     });
 
     dspaceRestService = TestBed.inject(DspaceRestService);
@@ -80,10 +86,10 @@ describe('DspaceRestService', () => {
     });
 
     it('should log an error', () => {
-      spyOn(console, 'log');
+      spyOn(console, 'error');
 
       dspaceRestService.get(url).subscribe(() => undefined, (err: unknown) => {
-        expect(console.log).toHaveBeenCalled();
+        expect(console.error).toHaveBeenCalled();
       });
 
       const req = httpMock.expectOne(url);

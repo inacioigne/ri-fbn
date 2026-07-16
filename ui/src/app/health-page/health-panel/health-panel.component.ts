@@ -1,13 +1,10 @@
-import {
-  NgFor,
-  NgIf,
-  TitleCasePipe,
-} from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import {
   Component,
   Input,
   OnInit,
 } from '@angular/core';
+import { HealthResponse } from '@dspace/core/shared/health-component.model';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import {
   TranslateModule,
@@ -15,7 +12,6 @@ import {
 } from '@ngx-translate/core';
 
 import { ObjNgFor } from '../../shared/utils/object-ngfor.pipe';
-import { HealthResponse } from '../models/health-component.model';
 import { HealthComponentComponent } from './health-component/health-component.component';
 import { HealthStatusComponent } from './health-status/health-status.component';
 
@@ -26,8 +22,14 @@ import { HealthStatusComponent } from './health-status/health-status.component';
   selector: 'ds-health-panel',
   templateUrl: './health-panel.component.html',
   styleUrls: ['./health-panel.component.scss'],
-  standalone: true,
-  imports: [HealthStatusComponent, NgbAccordionModule, NgFor, NgIf, HealthComponentComponent, TitleCasePipe, ObjNgFor, TranslateModule],
+  imports: [
+    HealthComponentComponent,
+    HealthStatusComponent,
+    NgbAccordionModule,
+    ObjNgFor,
+    TitleCasePipe,
+    TranslateModule,
+  ],
 })
 export class HealthPanelComponent implements OnInit {
 

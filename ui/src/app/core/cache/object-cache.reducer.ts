@@ -1,13 +1,13 @@
 /* eslint-disable max-classes-per-file */
 import {
+  hasValue,
+  isNotEmpty,
+} from '@dspace/shared/utils/empty.util';
+import {
   applyPatch,
   Operation,
 } from 'fast-json-patch';
 
-import {
-  hasValue,
-  isNotEmpty,
-} from '../../shared/empty.util';
 import { CacheEntry } from './cache-entry';
 import { CacheableObject } from './cacheable-object.model';
 import {
@@ -309,7 +309,7 @@ function addDependentsObjectCacheState(state: ObjectCacheState, action: AddDepen
 
 
 /**
- * Remove all dependent request UUIDs from a cached object, used to clear out-of-date depedencies
+ * Remove all dependent request UUIDs from a cached object, used to clear out-of-date dependencies
  *
  * @param state   the current state
  * @param action  an AddDependentsObjectCacheAction

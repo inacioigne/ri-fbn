@@ -1,7 +1,4 @@
-import {
-  AsyncPipe,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -14,6 +11,19 @@ import {
   RouterLink,
   Scroll,
 } from '@angular/router';
+import { CollectionDataService } from '@dspace/core/data/collection-data.service';
+import { ItemTemplateDataService } from '@dspace/core/data/item-template-data.service';
+import { RemoteData } from '@dspace/core/data/remote-data';
+import { RequestService } from '@dspace/core/data/request.service';
+import { NotificationsService } from '@dspace/core/notification-system/notifications.service';
+import { Collection } from '@dspace/core/shared/collection.model';
+import { Item } from '@dspace/core/shared/item.model';
+import { NoContent } from '@dspace/core/shared/NoContent.model';
+import {
+  getFirstCompletedRemoteData,
+  getFirstSucceededRemoteDataPayload,
+} from '@dspace/core/shared/operators';
+import { hasValue } from '@dspace/shared/utils/empty.util';
 import {
   TranslateModule,
   TranslateService,
@@ -27,20 +37,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
-import { CollectionDataService } from '../../../core/data/collection-data.service';
-import { ItemTemplateDataService } from '../../../core/data/item-template-data.service';
-import { RemoteData } from '../../../core/data/remote-data';
-import { RequestService } from '../../../core/data/request.service';
-import { Collection } from '../../../core/shared/collection.model';
-import { Item } from '../../../core/shared/item.model';
-import { NoContent } from '../../../core/shared/NoContent.model';
-import {
-  getFirstCompletedRemoteData,
-  getFirstSucceededRemoteDataPayload,
-} from '../../../core/shared/operators';
 import { ComcolMetadataComponent } from '../../../shared/comcol/comcol-forms/edit-comcol-page/comcol-metadata/comcol-metadata.component';
-import { hasValue } from '../../../shared/empty.util';
-import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { VarDirective } from '../../../shared/utils/var.directive';
 import { CollectionFormComponent } from '../../collection-form/collection-form.component';
 import { getCollectionItemTemplateRoute } from '../../collection-page-routing-paths';
@@ -52,14 +49,12 @@ import { getCollectionItemTemplateRoute } from '../../collection-page-routing-pa
   selector: 'ds-collection-metadata',
   templateUrl: './collection-metadata.component.html',
   imports: [
+    AsyncPipe,
     CollectionFormComponent,
     RouterLink,
-    AsyncPipe,
     TranslateModule,
-    NgIf,
     VarDirective,
   ],
-  standalone: true,
 })
 export class CollectionMetadataComponent extends ComcolMetadataComponent<Collection> implements OnInit {
   protected frontendURL = '/collections/';
@@ -84,7 +79,7 @@ export class CollectionMetadataComponent extends ComcolMetadataComponent<Collect
   }
 
   /**
-   * Cheking if the navigation is done and if so, initialize the collection's item template,
+   * Checking if the navigation is done and if so, initialize the collection's item template,
    * to ensure that the item template is always up to date.
    * Check when a NavigationEnd event (URL change) or a Scroll event followed by a NavigationEnd event (refresh event), occurs
    */

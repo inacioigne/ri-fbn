@@ -5,11 +5,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import {
-  AsyncPipe,
-  NgForOf,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -29,6 +25,18 @@ import {
   ActivatedRoute,
   Router,
 } from '@angular/router';
+import { LdnItemfiltersService } from '@dspace/core/coar-notify/ldn-services/ldn-itemfilters-data.service';
+import { LdnServicesService } from '@dspace/core/coar-notify/ldn-services/ldn-services-data.service';
+import { LDN_SERVICE } from '@dspace/core/coar-notify/ldn-services/models/ldn-service.resource-type';
+import { Itemfilter } from '@dspace/core/coar-notify/ldn-services/models/ldn-service-itemfilters';
+import { NotifyServicePattern } from '@dspace/core/coar-notify/ldn-services/models/ldn-service-patterns.model';
+import { LdnService } from '@dspace/core/coar-notify/ldn-services/models/ldn-services.model';
+import { FindListOptions } from '@dspace/core/data/find-list-options.model';
+import { PaginatedList } from '@dspace/core/data/paginated-list.model';
+import { RemoteData } from '@dspace/core/data/remote-data';
+import { NotificationsService } from '@dspace/core/notification-system/notifications.service';
+import { PaginationService } from '@dspace/core/pagination/pagination.service';
+import { getFirstCompletedRemoteData } from '@dspace/core/shared/operators';
 import {
   NgbDropdownModule,
   NgbModal,
@@ -43,20 +51,8 @@ import {
   Observable,
   Subscription,
 } from 'rxjs';
-import { RemoteData } from 'src/app/core/data/remote-data';
 
-import { FindListOptions } from '../../../core/data/find-list-options.model';
-import { PaginatedList } from '../../../core/data/paginated-list.model';
-import { PaginationService } from '../../../core/pagination/pagination.service';
-import { getFirstCompletedRemoteData } from '../../../core/shared/operators';
-import { NotificationsService } from '../../../shared/notifications/notifications.service';
 import { IpV4Validator } from '../../../shared/utils/ipV4.validator';
-import { LdnItemfiltersService } from '../ldn-services-data/ldn-itemfilters-data.service';
-import { LdnServicesService } from '../ldn-services-data/ldn-services-data.service';
-import { LDN_SERVICE } from '../ldn-services-model/ldn-service.resource-type';
-import { Itemfilter } from '../ldn-services-model/ldn-service-itemfilters';
-import { NotifyServicePattern } from '../ldn-services-model/ldn-service-patterns.model';
-import { LdnService } from '../ldn-services-model/ldn-services.model';
 import { notifyPatterns } from '../ldn-services-patterns/ldn-service-coar-patterns';
 
 /**
@@ -66,7 +62,6 @@ import { notifyPatterns } from '../ldn-services-patterns/ldn-service-coar-patter
   selector: 'ds-ldn-service-form',
   templateUrl: './ldn-service-form.component.html',
   styleUrls: ['./ldn-service-form.component.scss'],
-  standalone: true,
   animations: [
     trigger('toggleAnimation', [
       state('true', style({})),
@@ -75,12 +70,10 @@ import { notifyPatterns } from '../ldn-services-patterns/ldn-service-coar-patter
     ]),
   ],
   imports: [
+    AsyncPipe,
+    NgbDropdownModule,
     ReactiveFormsModule,
     TranslateModule,
-    NgIf,
-    NgbDropdownModule,
-    NgForOf,
-    AsyncPipe,
   ],
 })
 export class LdnServiceFormComponent implements OnInit, OnDestroy {
@@ -131,6 +124,7 @@ export class LdnServiceFormComponent implements OnInit, OnDestroy {
       score: ['', [Validators.required, Validators.pattern('^0*(\.[0-9]+)?$|^1(\.0+)?$')]], inboundPattern: [''],
       constraintPattern: [''],
       enabled: [''],
+      usesActorEmailId: [''],
       type: LDN_SERVICE.value,
     });
   }
@@ -184,7 +178,8 @@ export class LdnServiceFormComponent implements OnInit, OnDestroy {
       return rest;
     });
 
-    const values = { ...this.formModel.value, enabled: true };
+    const values = { ...this.formModel.value, enabled: true,
+      usesActorEmailId: this.formModel.get('usesActorEmailId').value };
 
     const ldnServiceData = this.ldnServicesService.create(values);
 
@@ -243,6 +238,7 @@ export class LdnServiceFormComponent implements OnInit, OnDestroy {
             ldnUrl: this.ldnService.ldnUrl,
             type: this.ldnService.type,
             enabled: this.ldnService.enabled,
+            usesActorEmailId: this.ldnService.usesActorEmailId,
             lowerIp: this.ldnService.lowerIp,
             upperIp: this.ldnService.upperIp,
           });
@@ -388,6 +384,32 @@ export class LdnServiceFormComponent implements OnInit, OnDestroy {
         this.cdRef.detectChanges();
       },
     );
+  }
+
+  /**
+   * Toggles the usesActorEmailId field of the LDN service by sending a patch request
+   */
+  toggleUsesActorEmailId() {
+    const newStatus = !this.formModel.get('usesActorEmailId').value;
+    if (!this.isNewService) {
+      const patchOperation: Operation = {
+        op: 'replace',
+        path: '/usesActorEmailId',
+        value: newStatus,
+      };
+
+      this.ldnServicesService.patch(this.ldnService, [patchOperation]).pipe(
+        getFirstCompletedRemoteData(),
+      ).subscribe(
+        () => {
+          this.formModel.get('usesActorEmailId').setValue(newStatus);
+          this.cdRef.detectChanges();
+        },
+      );
+    } else {
+      this.formModel.get('usesActorEmailId').setValue(newStatus);
+      this.cdRef.detectChanges();
+    }
   }
 
   /**

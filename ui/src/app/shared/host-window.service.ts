@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
+  maxMobileWidth,
+  WidthCategory,
+} from '@dspace/core/shared/host-window-type';
+import { hasValue } from '@dspace/shared/utils/empty.util';
+import {
   createSelector,
   select,
   Store,
@@ -15,19 +20,8 @@ import {
 } from 'rxjs/operators';
 
 import { AppState } from '../app.reducer';
-import { hasValue } from './empty.util';
 import { CSSVariableService } from './sass-helper/css-variable.service';
 import { HostWindowState } from './search/host-window.reducer';
-
-export enum WidthCategory {
-  XS = 0,
-  SM = 1,
-  MD = 2,
-  LG = 3,
-  XL = 4,
-}
-
-export const maxMobileWidth = WidthCategory.SM;
 
 const hostWindowStateSelector = (state: AppState) => state.hostWindow;
 const widthSelector = createSelector(hostWindowStateSelector, (hostWindow: HostWindowState) => hostWindow.width);
@@ -43,10 +37,10 @@ export class HostWindowService {
     /* See _exposed_variables.scss */
     variableService.getAllVariables()
       .subscribe((variables) => {
-        this.breakPoints.XL_MIN = parseInt(variables['--bs-xl-min'], 10);
-        this.breakPoints.LG_MIN = parseInt(variables['--bs-lg-min'], 10);
-        this.breakPoints.MD_MIN = parseInt(variables['--bs-md-min'], 10);
-        this.breakPoints.SM_MIN = parseInt(variables['--bs-sm-min'], 10);
+        this.breakPoints.XL_MIN = parseInt(variables['--bs-xl'], 10);
+        this.breakPoints.LG_MIN = parseInt(variables['--bs-lg'], 10);
+        this.breakPoints.MD_MIN = parseInt(variables['--bs-md'], 10);
+        this.breakPoints.SM_MIN = parseInt(variables['--bs-sm'], 10);
       });
   }
 
@@ -147,10 +141,10 @@ export class HostWindowService {
   }
 
   isXsOrSm(): Observable<boolean> {
-    return observableCombineLatest(
+    return observableCombineLatest([
       this.isXs(),
       this.isSm(),
-    ).pipe(
+    ]).pipe(
       map(([isXs, isSm]) => isXs || isSm),
       distinctUntilChanged(),
     );

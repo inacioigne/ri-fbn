@@ -1,7 +1,9 @@
 import { Route } from '@angular/router';
+import { i18nBreadcrumbResolver } from '@dspace/core/breadcrumbs/i18n-breadcrumb.resolver';
 
-import { i18nBreadcrumbResolver } from '../core/breadcrumbs/i18n-breadcrumb.resolver';
 import { AdminCurationTasksComponent } from './admin-curation-tasks/admin-curation-tasks.component';
+import { AdminEditCmsMetadataComponent } from './admin-edit-cms-metadata/admin-edit-cms-metadata.component';
+import { AdminEditUserAgreementComponent } from './admin-edit-user-agreement/admin-edit-user-agreement.component';
 import { BatchImportPageComponent } from './admin-import-batch-page/batch-import-page.component';
 import { ThemedMetadataImportPageComponent } from './admin-import-metadata-page/themed-metadata-import-page.component';
 import {
@@ -11,8 +13,8 @@ import {
   REGISTRIES_MODULE_PATH,
   REPORTS_MODULE_PATH,
 } from './admin-routing-paths';
-import { AdminSearchPageComponent } from './admin-search-page/admin-search-page.component';
-import { AdminWorkflowPageComponent } from './admin-workflow-page/admin-workflow-page.component';
+import { ThemedAdminSearchPageComponent } from './admin-search-page/themed-admin-search-page.component';
+import { ThemedAdminWorkflowPageComponent } from './admin-workflow-page/themed-admin-workflow-page.component';
 
 export const ROUTES: Route[] = [
   {
@@ -28,13 +30,13 @@ export const ROUTES: Route[] = [
   {
     path: 'search',
     resolve: { breadcrumb: i18nBreadcrumbResolver },
-    component: AdminSearchPageComponent,
+    component: ThemedAdminSearchPageComponent,
     data: { title: 'admin.search.title', breadcrumbKey: 'admin.search' },
   },
   {
     path: 'workflow',
     resolve: { breadcrumb: i18nBreadcrumbResolver },
-    component: AdminWorkflowPageComponent,
+    component: ThemedAdminWorkflowPageComponent,
     data: { title: 'admin.workflow.title', breadcrumbKey: 'admin.workflow' },
   },
   {
@@ -54,6 +56,18 @@ export const ROUTES: Route[] = [
     resolve: { breadcrumb: i18nBreadcrumbResolver },
     component: BatchImportPageComponent,
     data: { title: 'admin.batch-import.title', breadcrumbKey: 'admin.batch-import' },
+  },
+  {
+    path: 'edit-cms-metadata',
+    resolve: { breadcrumb: i18nBreadcrumbResolver },
+    component: AdminEditCmsMetadataComponent,
+    data: { title: 'admin.edit-cms-metadata.title', breadcrumbKey: 'admin.edit-cms-metadata' },
+  },
+  {
+    path: 'edit-user-agreement',
+    resolve: { breadcrumb: i18nBreadcrumbResolver },
+    component: AdminEditUserAgreementComponent,
+    data: { title: 'admin.edit-user-agreement.title', breadcrumbKey: 'admin.edit-user-agreement' },
   },
   {
     path: 'system-wide-alert',

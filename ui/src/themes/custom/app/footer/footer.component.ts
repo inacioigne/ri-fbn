@@ -1,11 +1,11 @@
 import {
   AsyncPipe,
   DatePipe,
-  NgIf,
 } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { MarkdownViewerComponent } from 'src/app/shared/markdown-viewer/markdown-viewer.component';
 
 import { FooterComponent as BaseComponent } from '../../../../app/footer/footer.component';
 
@@ -15,8 +15,13 @@ import { FooterComponent as BaseComponent } from '../../../../app/footer/footer.
   styleUrls: ['../../../../app/footer/footer.component.scss'],
   // templateUrl: './footer.component.html'
   templateUrl: '../../../../app/footer/footer.component.html',
-  standalone: true,
-  imports: [NgIf, RouterLink, AsyncPipe, DatePipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    DatePipe,
+    MarkdownViewerComponent,
+    RouterLink,
+    TranslateModule,
+  ],
 })
 export class FooterComponent extends BaseComponent {
 }

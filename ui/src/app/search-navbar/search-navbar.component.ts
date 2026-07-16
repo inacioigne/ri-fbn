@@ -11,8 +11,8 @@ import {
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SearchService } from '../core/shared/search/search.service';
 import { expandSearchInput } from '../shared/animations/slide';
+import { SearchService } from '../shared/search/search.service';
 import { BrowserOnlyPipe } from '../shared/utils/browser-only.pipe';
 import { ClickOutsideDirective } from '../shared/utils/click-outside.directive';
 
@@ -24,14 +24,19 @@ import { ClickOutsideDirective } from '../shared/utils/click-outside.directive';
   templateUrl: './search-navbar.component.html',
   styleUrls: ['./search-navbar.component.scss'],
   animations: [expandSearchInput],
-  standalone: true,
-  imports: [ClickOutsideDirective, FormsModule, ReactiveFormsModule, TranslateModule, BrowserOnlyPipe],
+  imports: [
+    BrowserOnlyPipe,
+    ClickOutsideDirective,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule,
+  ],
 })
 export class SearchNavbarComponent {
 
   // The search form
   searchForm;
-  // Whether or not the search bar is expanded, boolean for html ngIf, string fo AngularAnimation state change
+  // Whether or not the search bar is expanded, boolean for html ngIf, string for AngularAnimation state change
   searchExpanded = false;
   isExpanded = 'collapsed';
 

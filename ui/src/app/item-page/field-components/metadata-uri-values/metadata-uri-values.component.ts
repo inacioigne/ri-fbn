@@ -1,14 +1,11 @@
-import {
-  NgForOf,
-  NgIf,
-} from '@angular/common';
+
 import {
   Component,
   Input,
 } from '@angular/core';
+import { MetadataValue } from '@dspace/core/shared/metadata.models';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { MetadataValue } from '../../../core/shared/metadata.models';
 import { MetadataFieldWrapperComponent } from '../../../shared/metadata-field-wrapper/metadata-field-wrapper.component';
 import { MetadataValuesComponent } from '../metadata-values/metadata-values.component';
 
@@ -26,10 +23,7 @@ import { MetadataValuesComponent } from '../metadata-values/metadata-values.comp
   imports: [
     MetadataFieldWrapperComponent,
     TranslateModule,
-    NgForOf,
-    NgIf,
   ],
-  standalone: true,
 })
 export class MetadataUriValuesComponent extends MetadataValuesComponent {
 
@@ -45,7 +39,7 @@ export class MetadataUriValuesComponent extends MetadataValuesComponent {
   @Input() mdValues: MetadataValue[];
 
   /**
-   * The seperator used to split the metadata values (can contain HTML)
+   * The separator used to split the metadata values (can contain HTML)
    */
   @Input() separator: string;
 
