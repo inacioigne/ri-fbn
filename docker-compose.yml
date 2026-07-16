@@ -1,116 +1,107 @@
 networks:
-  dockernet:
-
+  fbn-net:
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
+    external: false
 services:
-  # Dspace UI
-  ui:
-     container_name: dspace-ui
-     image: "${DOCKER_REGISTRY:-docker.io}/${DOCKER_OWNER:-dspace}/dspace-angular:${DSPACE_VER:-dspace-8_x}-dist" 
-    #  image: fbn/dspace-ui:${DSPACE_VERSION}-dist
-     build: 
-       context: .
-      #  dockerfile: ui.dockerfile
-       dockerfile: ./ui-dist.dockerfile
-     env_file:
-       - .env
-     environment:
-      - NODE_ENV=production
-      - DSPACE_REST_SSL=true
-      - DSPACE_REST_HOST=ri.fbnovas.edu.br
-      - DSPACE_REST_PORT=443
-      - DSPACE_REST_NAMESPACE=/server
-     networks:
-       - dockernet
-     ports:
-     - published: 4000
-       target: 4000
-     stdin_open: true
-     tty: true
-     restart: unless-stopped    
-  # Dspace API
+  # DSpace (backend) webapp container
   api:
+    container_name: fbn-api
     env_file:
       - .env
-    container_name: dspace-api      
-    image: fbn/dspace-api:${DSPACE_VERSION}
-    build: 
-      context: .
-      dockerfile: api.dockerfile
-    
+    environment:
+      # Below syntax may look odd, but it is how to override dspace.cfg settings via env variables.
+      # See https://github.com/DSpace/DSpace/blob/main/dspace/config/config-definition.xml
+      # __P__ => "." (e.g. dspace__P__dir => dspace.dir)
+      # __D__ => "-" (e.g. google__D__metadata => google-metadata)
+      # Uncomment to set a non-default value for dspace.dir, dspace.server.url or dspace.ui.url
+      # dspace__P__dir: /dspace
+      # dspace__P__server__P__url: http://localhost:8080/server
+      # dspace__P__ui__P__url: http://localhost:4000
+      # Set SSR URL to the Docker container name so that UI can contact container directly in Production mode.
+      # (This is necessary for docker-compose-angular.yml as it uses production mode by default)
+      dspace__P__server__P__ssr__P__url: ${dspace__P__server__P__ssr__P__url:-http://fbn-api:8080/server}
+      dspace__P__name: "RI FBN"
+      # db.url: Ensure we are using the 'dspacedb' image for our database
+      db__P__url: ${db__P__url:-jdbc:postgresql://fbn-db:5432/dspace}
+      # solr.server: Ensure we are using the 'dspacesolr' image for Solr
+      solr__P__server: ${solr__P__server:-http://fbn-solr:8983/solr}
+      # matomo.tracker.url: Ensure we are using the 'matomo' image for Matomo
+      matomo__P__tracker__P__url: ${matomo__P__tracker__P__url:-http://matomo}
+      # proxies.trusted.ipranges: This setting is required for a REST API running in Docker to trust requests
+      # from the host machine. This IP range MUST correspond to the 'dspacenet' subnet defined above.
+      proxies__P__trusted__P__ipranges: ${proxies__P__trusted__P__ipranges:-172.23.0}
+      LOGGING_CONFIG: ${LOGGING_CONFIG:-/dspace/config/log4j2-container.xml}
+    image: "docker.io/fbn/api:${DSPACE_VERSION}"
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     depends_on:
-      - dspacedb
-      - dspacesolr
+    - dspacedb
+    - dspacesolr
     networks:
-      - dockernet
+      - fbn-net
     ports:
-      - published: 8080
-        target: 8080
-      - published: 8000
-        target: 8000
-    stdin_open: true
-    tty: true
-    restart: unless-stopped
+    - published: 8080
+      target: 8080
+    - published: 8000
+      target: 8000
     volumes:
     - assetstore:/dspace/assetstore
     - ./api/dspace/config:/dspace/config
-    - /home/fbn/dbip-city-lite-2025-05.mmdb:/dspace/dbip-city-lite-2025-05.mmdb
+    - /home/fbn/GeoLite2-City.mmdb:/dspace/GeoLite2-City.mmdb
     entrypoint:
     - /bin/bash
     - '-c'
     - |
       while (!</dev/tcp/dspacedb/5432) > /dev/null 2>&1; do sleep 1; done;
       /dspace/bin/dspace database migrate
-      java -jar /dspace/webapps/server-boot.jar --dspace.dir=/dspace
-
-  # Banco de Dados
+      java -jar /dspace/webapps/server-boot.jar
+  # DSpace PostgreSQL database container
   dspacedb:
-    container_name: dspacedb
-    image: fbn/dspacedb:${DSPACE_VERSION}
+    container_name: fbn-db
+    # Uses the base PostgreSQL image
+    image: "docker.io/postgres:${POSTGRES_VERSION:-15}"
     env_file:
       - .env
-    build: 
-     context: ./docker/db/
-     args:
-      POSTGRES_VERSION: ${POSTGRES_VERSION}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
+    environment:
+      PGDATA: /pgdata
+      POSTGRES_DB: dspace
+      POSTGRES_USER: dspace
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    
+      TZ: America/Sao_Paulo
     networks:
-      dockernet:
-    ports:
-      - published: 5432
-        target: 5432
-    stdin_open: true
-    tty: true
-    restart: unless-stopped
+      fbn-net:
+    expose:
+      - 5432
+    # ports:
+    # - published: 5432
+    #   target: 5432
     volumes:
-      - pgdata:/pgdata
-
-  # DSpace Solr
+    - pgdata:/pgdata
+  # DSpace Solr container
   dspacesolr:
-    container_name: dspacesolr
-    image: fbn/dspacesolr:${DSPACE_VERSION}
+    container_name: fbn-solr
     env_file:
       - .env
+    image: "fdv/dspace-solr:${DSPACE_VERSION}"
     build:
-      context: ./docker/solr/
-      additional_contexts: 
-        solrconfigs: ./api/dspace/solr
+      context: ./api/dspace/src/main/docker/dspace-solr/
+      additional_contexts:
+        solrconfigs: ./api/dspace/solr/
       args:
-        SOLR_VERSION: ${SOLR_VERSION}
-    
+        SOLR_VERSION: "${SOLR_VER:-9.8}"
     networks:
-      dockernet:
-    ports:
-      - published: 8983
-        target: 8983
-    stdin_open: true
-    tty: true
-    restart: unless-stopped
+      fbn-net:
+    # ports:
+    # - published: 8983
+    #   target: 8983
     working_dir: /var/solr/data
     volumes:
-      - solr_data:/var/solr/data
+    # Keep Solr data directory between reboots
+    - solr_data:/var/solr/data
+    user: root
     entrypoint:
     - /bin/bash
     - '-c'
@@ -128,9 +119,11 @@ services:
       cp -r /opt/solr/server/solr/configsets/qaevent/* qaevent
       precreate-core suggestion /opt/solr/server/solr/configsets/suggestion
       cp -r /opt/solr/server/solr/configsets/suggestion/* suggestion
-      exec solr -f
-
+      precreate-core audit /opt/solr/server/solr/configsets/audit
+      cp -r /opt/solr/server/solr/configsets/audit/* audit
+      chown -R solr:solr /var/solr
+      runuser -u solr -- solr-foreground
 volumes:
   assetstore:
   pgdata:
-  solr_data: 
+  solr_data:

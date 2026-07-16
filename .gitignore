@@ -6,3 +6,4 @@ old_docs
 /docker/db/Dockerfile
 /dspace-angular-dspace-8.1
 /tmp-*
+/local
