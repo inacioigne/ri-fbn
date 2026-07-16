@@ -21,7 +21,7 @@ services:
       # dspace__P__ui__P__url: http://localhost:4000
       # Set SSR URL to the Docker container name so that UI can contact container directly in Production mode.
       # (This is necessary for docker-compose-angular.yml as it uses production mode by default)
-      dspace__P__server__P__ssr__P__url: ${dspace__P__server__P__ssr__P__url:-http://fbn-api:8080/server}
+      # dspace__P__server__P__ssr__P__url: ${dspace__P__server__P__ssr__P__url:-http://fbn-api:8080/server}
       dspace__P__name: "RI FBN"
       # db.url: Ensure we are using the 'dspacedb' image for our database
       db__P__url: ${db__P__url:-jdbc:postgresql://fbn-db:5432/dspace}
@@ -43,10 +43,10 @@ services:
     networks:
       - fbn-net
     ports:
-    - published: 8080
+    - published: 8081
       target: 8080
-    - published: 8000
-      target: 8000
+    # - published: 8000
+    #   target: 8000
     volumes:
     - assetstore:/dspace/assetstore
     - ./api/dspace/config:/dspace/config
