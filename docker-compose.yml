@@ -1,9 +1,9 @@
 networks:
   fbn-net:
-    ipam:
-      config:
-        - subnet: 172.23.0.0/16
-    external: false
+    # ipam:
+    #   config:
+    #     - subnet: 172.23.0.0/16
+    # external: false
 services:
   # DSpace Angular UI container
   ui:
