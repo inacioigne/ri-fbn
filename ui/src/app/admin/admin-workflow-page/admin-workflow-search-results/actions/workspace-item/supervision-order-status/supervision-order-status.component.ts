@@ -1,8 +1,4 @@
-import {
-  AsyncPipe,
-  NgFor,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -11,7 +7,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { DSONameService } from '@dspace/core/breadcrumbs/dso-name.service';
+import { RemoteData } from '@dspace/core/data/remote-data';
+import { Group } from '@dspace/core/eperson/models/group.model';
+import { getFirstCompletedRemoteData } from '@dspace/core/shared/operators';
+import { SupervisionOrder } from '@dspace/core/supervision-order/models/supervision-order.model';
+import { isNotEmpty } from '@dspace/shared/utils/empty.util';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   BehaviorSubject,
@@ -24,12 +26,6 @@ import {
   reduce,
 } from 'rxjs/operators';
 
-import { DSONameService } from '../../../../../../core/breadcrumbs/dso-name.service';
-import { RemoteData } from '../../../../../../core/data/remote-data';
-import { Group } from '../../../../../../core/eperson/models/group.model';
-import { getFirstCompletedRemoteData } from '../../../../../../core/shared/operators';
-import { SupervisionOrder } from '../../../../../../core/supervision-order/models/supervision-order.model';
-import { isNotEmpty } from '../../../../../../shared/empty.util';
 import { VarDirective } from '../../../../../../shared/utils/var.directive';
 
 export interface SupervisionOrderListEntry {
@@ -41,8 +37,12 @@ export interface SupervisionOrderListEntry {
   selector: 'ds-supervision-order-status',
   templateUrl: './supervision-order-status.component.html',
   styleUrls: ['./supervision-order-status.component.scss'],
-  standalone: true,
-  imports: [VarDirective, NgIf, NgFor, NgbTooltipModule, AsyncPipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    NgbTooltip,
+    TranslateModule,
+    VarDirective,
+  ],
 })
 export class SupervisionOrderStatusComponent implements OnChanges {
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { hasValue } from '@dspace/shared/utils/empty.util';
 
-import { hasValue } from '../../shared/empty.util';
 import {
   MetadataValue,
   VIRTUAL_METADATA_PREFIX,
@@ -27,7 +27,7 @@ export class MetadataService {
    * Returns undefined otherwise.
    */
   public virtualValue(metadataValue: MetadataValue | undefined): string {
-    if (this.isVirtual) {
+    if (this.isVirtual(metadataValue)) {
       return metadataValue.authority.substring(metadataValue.authority.indexOf(VIRTUAL_METADATA_PREFIX) + VIRTUAL_METADATA_PREFIX.length);
     } else {
       return undefined;

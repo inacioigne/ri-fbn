@@ -1,11 +1,7 @@
-import {
-  AsyncPipe,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SearchConfigurationService } from '../../../../../../../../../app/core/shared/search/search-configuration.service';
 import { SEARCH_CONFIG_SERVICE } from '../../../../../../../../../app/my-dspace-page/my-dspace-configuration.service';
 import {
   fadeIn,
@@ -16,6 +12,7 @@ import { DsDynamicLookupRelationExternalSourceTabComponent as BaseComponent } fr
 import { ThemedLoadingComponent } from '../../../../../../../../../app/shared/loading/themed-loading.component';
 import { ObjectCollectionComponent } from '../../../../../../../../../app/shared/object-collection/object-collection.component';
 import { PageSizeSelectorComponent } from '../../../../../../../../../app/shared/page-size-selector/page-size-selector.component';
+import { SearchConfigurationService } from '../../../../../../../../../app/shared/search/search-configuration.service';
 import { ThemedSearchFormComponent } from '../../../../../../../../../app/shared/search-form/themed-search-form.component';
 import { VarDirective } from '../../../../../../../../../app/shared/utils/var.directive';
 
@@ -35,19 +32,16 @@ import { VarDirective } from '../../../../../../../../../app/shared/utils/var.di
     fadeIn,
     fadeInOut,
   ],
-  standalone: true,
   imports: [
-    ThemedSearchFormComponent,
-    PageSizeSelectorComponent,
-    ObjectCollectionComponent,
-    VarDirective,
     AsyncPipe,
-    TranslateModule,
     ErrorComponent,
-    NgIf,
+    ObjectCollectionComponent,
+    PageSizeSelectorComponent,
     ThemedLoadingComponent,
+    ThemedSearchFormComponent,
+    TranslateModule,
+    VarDirective,
   ],
 })
 export class DsDynamicLookupRelationExternalSourceTabComponent extends BaseComponent {
-
 }

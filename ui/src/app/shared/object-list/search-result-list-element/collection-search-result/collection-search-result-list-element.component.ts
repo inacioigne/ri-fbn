@@ -1,17 +1,15 @@
-import {
-  NgClass,
-  NgIf,
-} from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   Component,
   OnInit,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Collection } from '@dspace/core/shared/collection.model';
+import { CollectionSearchResult } from '@dspace/core/shared/object-collection/collection-search-result.model';
+import { ViewMode } from '@dspace/core/shared/view-mode.model';
 
-import { Collection } from '../../../../core/shared/collection.model';
-import { ViewMode } from '../../../../core/shared/view-mode.model';
+import { MetadataDirective } from '../../../metadata.directive';
 import { ThemedBadgesComponent } from '../../../object-collection/shared/badges/themed-badges.component';
-import { CollectionSearchResult } from '../../../object-collection/shared/collection-search-result.model';
 import { listableObjectComponent } from '../../../object-collection/shared/listable-object/listable-object.decorator';
 import { SearchResultListElementComponent } from '../search-result-list-element.component';
 
@@ -19,8 +17,12 @@ import { SearchResultListElementComponent } from '../search-result-list-element.
   selector: 'ds-collection-search-result-list-element',
   styleUrls: ['../search-result-list-element.component.scss', 'collection-search-result-list-element.component.scss'],
   templateUrl: 'collection-search-result-list-element.component.html',
-  standalone: true,
-  imports: [NgIf, NgClass, ThemedBadgesComponent, RouterLink],
+  imports: [
+    MetadataDirective,
+    NgClass,
+    RouterLink,
+    ThemedBadgesComponent,
+  ],
 })
 /**
  * Component representing a collection search result in list view

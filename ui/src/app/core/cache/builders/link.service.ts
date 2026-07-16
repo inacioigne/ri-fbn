@@ -4,6 +4,10 @@ import {
   Injector,
 } from '@angular/core';
 import {
+  hasValue,
+  isNotEmpty,
+} from '@dspace/shared/utils/empty.util';
+import {
   EMPTY,
   Observable,
 } from 'rxjs';
@@ -12,19 +16,15 @@ import {
   switchMap,
 } from 'rxjs/operators';
 
-import {
-  APP_DATA_SERVICES_MAP,
-  LazyDataServicesMap,
-} from '../../../../config/app-config.interface';
-import {
-  hasValue,
-  isNotEmpty,
-} from '../../../shared/empty.util';
-import { FollowLinkConfig } from '../../../shared/utils/follow-link-config.model';
 import { HALDataService } from '../../data/base/hal-data-service.interface';
 import { PaginatedList } from '../../data/paginated-list.model';
 import { RemoteData } from '../../data/remote-data';
+import {
+  APP_DATA_SERVICES_MAP,
+  LazyDataServicesMap,
+} from '../../data-services-map-type';
 import { lazyDataService } from '../../lazy-data-service';
+import { FollowLinkConfig } from '../../shared/follow-link-config.model';
 import { GenericConstructor } from '../../shared/generic-constructor';
 import { HALResource } from '../../shared/hal-resource.model';
 import {
@@ -112,7 +112,16 @@ export class LinkService {
    * @param linkToFollow the {@link FollowLinkConfig} to resolve
    */
   public resolveLink<T extends HALResource>(model, linkToFollow: FollowLinkConfig<T>): T {
-    model[linkToFollow.name] = this.resolveLinkWithoutAttaching(model, linkToFollow);
+    const linkDefinitions = this.getLinkDefinitions(model.constructor as GenericConstructor<T>);
+    const linkDef = linkDefinitions.get(linkToFollow.name);
+
+    if (isNotEmpty(linkDef)) {
+      // If link exist in definition we can resolve it and  use a real property name
+      model[linkDef.propertyName] = this.resolveLinkWithoutAttaching(model, linkToFollow);
+    } else {
+      // For some links we don't have a definition, so we use the link name as property name
+      model[linkToFollow.name] = this.resolveLinkWithoutAttaching(model, linkToFollow);
+    }
     return model;
   }
 

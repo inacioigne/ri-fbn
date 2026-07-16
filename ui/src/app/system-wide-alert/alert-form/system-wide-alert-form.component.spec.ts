@@ -5,6 +5,17 @@ import {
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RequestService } from '@dspace/core/data/request.service';
+import { SystemWideAlertDataService } from '@dspace/core/data/system-wide-alert-data.service';
+import { NotificationsService } from '@dspace/core/notification-system/notifications.service';
+import { SystemWideAlert } from '@dspace/core/shared/system-wide-alert.model';
+import { NotificationsServiceStub } from '@dspace/core/testing/notifications-service.stub';
+import { RouterStub } from '@dspace/core/testing/router.stub';
+import { createPaginatedList } from '@dspace/core/testing/utils.test';
+import {
+  createFailedRemoteDataObject$,
+  createSuccessfulRemoteDataObject$,
+} from '@dspace/core/utilities/remote-data.utils';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   utcToZonedTime,
@@ -12,17 +23,6 @@ import {
 } from 'date-fns-tz';
 import { UiSwitchModule } from 'ngx-ui-switch';
 
-import { RequestService } from '../../core/data/request.service';
-import { SystemWideAlertDataService } from '../../core/data/system-wide-alert-data.service';
-import { NotificationsService } from '../../shared/notifications/notifications.service';
-import {
-  createFailedRemoteDataObject$,
-  createSuccessfulRemoteDataObject$,
-} from '../../shared/remote-data.utils';
-import { NotificationsServiceStub } from '../../shared/testing/notifications-service.stub';
-import { RouterStub } from '../../shared/testing/router.stub';
-import { createPaginatedList } from '../../shared/testing/utils.test';
-import { SystemWideAlert } from '../system-wide-alert.model';
 import { SystemWideAlertFormComponent } from './system-wide-alert-form.component';
 
 describe('SystemWideAlertFormComponent', () => {
@@ -170,7 +170,7 @@ describe('SystemWideAlertFormComponent', () => {
   });
 
   describe('save', () => {
-    it('should update the exising alert with the form values and show a success notification on success and navigate back', () => {
+    it('should update the existing alert with the form values and show a success notification on success and navigate back', () => {
       spyOn(comp, 'back');
       comp.currentAlert = systemWideAlert;
 
@@ -184,7 +184,7 @@ describe('SystemWideAlertFormComponent', () => {
       expectedAlert.message = 'New message';
       expectedAlert.active = true;
       const countDownTo = new Date(2023, 0, 25, 4, 26);
-      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toUTCString();
+      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toISOString();
 
       comp.save();
 
@@ -193,7 +193,7 @@ describe('SystemWideAlertFormComponent', () => {
       expect(requestService.setStaleByHrefSubstring).toHaveBeenCalledWith('systemwidealerts');
       expect(comp.back).toHaveBeenCalled();
     });
-    it('should update the exising alert with the form values and show a success notification on success and not navigate back when false is provided to the save method', () => {
+    it('should update the existing alert with the form values and show a success notification on success and not navigate back when false is provided to the save method', () => {
       spyOn(comp, 'back');
       comp.currentAlert = systemWideAlert;
 
@@ -207,7 +207,7 @@ describe('SystemWideAlertFormComponent', () => {
       expectedAlert.message = 'New message';
       expectedAlert.active = true;
       const countDownTo = new Date(2023, 0, 25, 4, 26);
-      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toUTCString();
+      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toISOString();
 
       comp.save(false);
 
@@ -216,7 +216,7 @@ describe('SystemWideAlertFormComponent', () => {
       expect(requestService.setStaleByHrefSubstring).toHaveBeenCalledWith('systemwidealerts');
       expect(comp.back).not.toHaveBeenCalled();
     });
-    it('should update the exising alert with the form values but add an empty countdown date when disabled and show a success notification on success', () => {
+    it('should update the existing alert with the form values but add an empty countdown date when disabled and show a success notification on success', () => {
       spyOn(comp, 'back');
       comp.currentAlert = systemWideAlert;
 
@@ -239,7 +239,7 @@ describe('SystemWideAlertFormComponent', () => {
       expect(requestService.setStaleByHrefSubstring).toHaveBeenCalledWith('systemwidealerts');
       expect(comp.back).toHaveBeenCalled();
     });
-    it('should update the exising alert with the form values and show a error notification on error', () => {
+    it('should update the existing alert with the form values and show a error notification on error', () => {
       spyOn(comp, 'back');
       (systemWideAlertDataService.put as jasmine.Spy).and.returnValue(createFailedRemoteDataObject$());
       comp.currentAlert = systemWideAlert;
@@ -254,7 +254,7 @@ describe('SystemWideAlertFormComponent', () => {
       expectedAlert.message = 'New message';
       expectedAlert.active = true;
       const countDownTo = new Date(2023, 0, 25, 4, 26);
-      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toUTCString();
+      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toISOString();
 
       comp.save();
 
@@ -276,7 +276,7 @@ describe('SystemWideAlertFormComponent', () => {
       expectedAlert.message = 'New message';
       expectedAlert.active = true;
       const countDownTo = new Date(2023, 0, 25, 4, 26);
-      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toUTCString();
+      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toISOString();
 
       comp.save();
 
@@ -301,7 +301,7 @@ describe('SystemWideAlertFormComponent', () => {
       expectedAlert.message = 'New message';
       expectedAlert.active = true;
       const countDownTo = new Date(2023, 0, 25, 4, 26);
-      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toUTCString();
+      expectedAlert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toISOString();
 
       comp.save();
 

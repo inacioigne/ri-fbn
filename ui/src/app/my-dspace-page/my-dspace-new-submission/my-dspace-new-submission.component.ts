@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import {
   ChangeDetectorRef,
   Component,
@@ -9,17 +9,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '@dspace/core/auth/auth.service';
+import { NotificationsService } from '@dspace/core/notification-system/notifications.service';
+import { DSpaceObject } from '@dspace/core/shared/dspace-object.model';
+import { HALEndpointService } from '@dspace/core/shared/hal-endpoint.service';
+import { SearchResult } from '@dspace/core/shared/search/models/search-result.model';
+import { hasValue } from '@dspace/shared/utils/empty.util';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { AuthService } from '../../core/auth/auth.service';
-import { DSpaceObject } from '../../core/shared/dspace-object.model';
-import { HALEndpointService } from '../../core/shared/hal-endpoint.service';
-import { hasValue } from '../../shared/empty.util';
-import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { SearchResult } from '../../shared/search/models/search-result.model';
 import { UploaderComponent } from '../../shared/upload/uploader/uploader.component';
 import { UploaderError } from '../../shared/upload/uploader/uploader-error.model';
 import { UploaderOptions } from '../../shared/upload/uploader/uploader-options.model';
@@ -38,9 +38,7 @@ import { MyDSpaceNewSubmissionDropdownComponent } from './my-dspace-new-submissi
     MyDSpaceNewExternalDropdownComponent,
     MyDSpaceNewSubmissionDropdownComponent,
     UploaderComponent,
-    NgIf,
   ],
-  standalone: true,
 })
 export class MyDSpaceNewSubmissionComponent implements OnDestroy, OnInit {
   /**
@@ -140,7 +138,7 @@ export class MyDSpaceNewSubmissionComponent implements OnDestroy, OnInit {
     } else {
       const modalRef = this.modalService.open(CollectionSelectorComponent);
       // When the dialog are closes its takes the collection selected and
-      // uploads choosed file after adds owningCollection parameter
+      // uploads chosen file after adds owningCollection parameter
       modalRef.result.then( (result) => {
         uploader.onBuildItemForm = (fileItem: any, form: any) => {
           form.append('owningCollection', result.uuid);

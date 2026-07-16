@@ -1,8 +1,6 @@
 import {
   AsyncPipe,
   NgClass,
-  NgFor,
-  NgIf,
 } from '@angular/common';
 import {
   Component,
@@ -20,6 +18,34 @@ import {
   ReactiveFormsModule,
   UntypedFormControl,
 } from '@angular/forms';
+import { DSONameService } from '@dspace/core/breadcrumbs/dso-name.service';
+import { SortOptions } from '@dspace/core/cache/models/sort-options.model';
+import {
+  buildPaginatedList,
+  PaginatedList,
+} from '@dspace/core/data/paginated-list.model';
+import { RemoteData } from '@dspace/core/data/remote-data';
+import { NotificationType } from '@dspace/core/notification-system/models/notification-type';
+import { NotificationsService } from '@dspace/core/notification-system/notifications.service';
+import { Context } from '@dspace/core/shared/context.model';
+import { DSpaceObject } from '@dspace/core/shared/dspace-object.model';
+import { DSpaceObjectType } from '@dspace/core/shared/dspace-object-type.model';
+import { ListableNotificationObject } from '@dspace/core/shared/listable-notification-object.model';
+import { LISTABLE_NOTIFICATION_OBJECT } from '@dspace/core/shared/object-collection/listable-notification-object.resource-type';
+import { ListableObject } from '@dspace/core/shared/object-collection/listable-object.model';
+import {
+  getFirstCompletedRemoteData,
+  getFirstSucceededRemoteDataPayload,
+} from '@dspace/core/shared/operators';
+import { PaginatedSearchOptions } from '@dspace/core/shared/search/models/paginated-search-options.model';
+import { SearchResult } from '@dspace/core/shared/search/models/search-result.model';
+import { ViewMode } from '@dspace/core/shared/view-mode.model';
+import {
+  hasNoValue,
+  hasValue,
+  isEmpty,
+  isNotEmpty,
+} from '@dspace/shared/utils/empty.util';
 import {
   TranslateModule,
   TranslateService,
@@ -29,7 +55,7 @@ import {
   BehaviorSubject,
   combineLatest as observableCombineLatest,
   Observable,
-  of as observableOf,
+  of,
   Subscription,
 } from 'rxjs';
 import {
@@ -40,46 +66,27 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
-import { SortOptions } from '../../../core/cache/models/sort-options.model';
-import {
-  buildPaginatedList,
-  PaginatedList,
-} from '../../../core/data/paginated-list.model';
-import { RemoteData } from '../../../core/data/remote-data';
-import { Context } from '../../../core/shared/context.model';
-import { DSpaceObject } from '../../../core/shared/dspace-object.model';
-import { DSpaceObjectType } from '../../../core/shared/dspace-object-type.model';
-import {
-  getFirstCompletedRemoteData,
-  getFirstSucceededRemoteDataPayload,
-} from '../../../core/shared/operators';
-import { SearchService } from '../../../core/shared/search/search.service';
-import { ViewMode } from '../../../core/shared/view-mode.model';
-import {
-  hasNoValue,
-  hasValue,
-  isEmpty,
-  isNotEmpty,
-} from '../../empty.util';
 import { HoverClassDirective } from '../../hover-class.directive';
 import { ThemedLoadingComponent } from '../../loading/themed-loading.component';
-import { NotificationType } from '../../notifications/models/notification-type';
-import { NotificationsService } from '../../notifications/notifications.service';
 import { CollectionElementLinkType } from '../../object-collection/collection-element-link.type';
-import { ListableObject } from '../../object-collection/shared/listable-object.model';
 import { ListableObjectComponentLoaderComponent } from '../../object-collection/shared/listable-object/listable-object-component-loader.component';
-import { ListableNotificationObject } from '../../object-list/listable-notification-object/listable-notification-object.model';
-import { LISTABLE_NOTIFICATION_OBJECT } from '../../object-list/listable-notification-object/listable-notification-object.resource-type';
-import { PaginatedSearchOptions } from '../../search/models/paginated-search-options.model';
-import { SearchResult } from '../../search/models/search-result.model';
+import { SearchService } from '../../search/search.service';
 
 @Component({
   selector: 'ds-dso-selector',
   styleUrls: ['./dso-selector.component.scss'],
   templateUrl: './dso-selector.component.html',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, InfiniteScrollModule, NgIf, NgFor, HoverClassDirective, NgClass, ListableObjectComponentLoaderComponent, ThemedLoadingComponent, AsyncPipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    FormsModule,
+    HoverClassDirective,
+    InfiniteScrollModule,
+    ListableObjectComponentLoaderComponent,
+    NgClass,
+    ReactiveFormsModule,
+    ThemedLoadingComponent,
+    TranslateModule,
+  ],
 })
 
 /**
@@ -91,6 +98,12 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
    * The view mode of the listed objects
    */
   viewMode = ViewMode.ListElement;
+
+  /**
+   * The current context
+   */
+  @Input() context: Context;
+
   /**
    * The initially selected DSO's uuid
    */
@@ -197,7 +210,7 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
     if (isNotEmpty(this.currentDSOId)) {
       currentDSOResult$ = this.search(this.getCurrentDSOQuery(), 1).pipe(getFirstSucceededRemoteDataPayload());
     } else {
-      currentDSOResult$ = observableOf(buildPaginatedList(undefined, []));
+      currentDSOResult$ = of(buildPaginatedList(undefined, []));
     }
 
     // Combine current DSO, query and page
@@ -307,7 +320,14 @@ export class DSOSelectorComponent implements OnInit, OnDestroy {
   /**
    * Get the context for element with the given id
    */
-  getContext(id: string) {
+  getContext(id: string): Context {
+    if (this.context === Context.ScopeSelectorModal) {
+      if (id === this.currentDSOId) {
+        return Context.ScopeSelectorModalCurrent;
+      } else {
+        return Context.ScopeSelectorModal;
+      }
+    }
     if (id === this.currentDSOId) {
       return Context.SideBarSearchModalCurrent;
     } else {

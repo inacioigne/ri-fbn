@@ -1,14 +1,32 @@
 import {
   AsyncPipe,
   NgClass,
-  NgForOf,
-  NgIf,
 } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
   Inject,
 } from '@angular/core';
+import { LdnServicesService } from '@dspace/core/coar-notify/ldn-services/ldn-services-data.service';
+import {
+  LdnService,
+  LdnServiceByPattern,
+} from '@dspace/core/coar-notify/ldn-services/models/ldn-services.model';
+import { LdnPattern } from '@dspace/core/coar-notify/notify-info/models/submission-coar-notify.model';
+import { CoarNotifyConfigDataService } from '@dspace/core/config/coar-notify-config-data.service';
+import { JsonPatchOperationPathCombiner } from '@dspace/core/json-patch/builder/json-patch-operation-path-combiner';
+import { JsonPatchOperationsBuilder } from '@dspace/core/json-patch/builder/json-patch-operations-builder';
+import {
+  getFirstCompletedRemoteData,
+  getPaginatedListPayload,
+  getRemoteDataPayload,
+} from '@dspace/core/shared/operators';
+import { SubmissionSectionError } from '@dspace/core/submission/models/submission-section-error.model';
+import {
+  hasValue,
+  isEmpty,
+  isNotEmpty,
+} from '@dspace/shared/utils/empty.util';
 import {
   NgbDropdown,
   NgbDropdownModule,
@@ -26,29 +44,9 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { LdnServicesService } from '../../../admin/admin-ldn-services/ldn-services-data/ldn-services-data.service';
-import {
-  LdnService,
-  LdnServiceByPattern,
-} from '../../../admin/admin-ldn-services/ldn-services-model/ldn-services.model';
-import { JsonPatchOperationPathCombiner } from '../../../core/json-patch/builder/json-patch-operation-path-combiner';
-import { JsonPatchOperationsBuilder } from '../../../core/json-patch/builder/json-patch-operations-builder';
-import {
-  getFirstCompletedRemoteData,
-  getPaginatedListPayload,
-  getRemoteDataPayload,
-} from '../../../core/shared/operators';
-import {
-  hasValue,
-  isEmpty,
-  isNotEmpty,
-} from '../../../shared/empty.util';
-import { SubmissionSectionError } from '../../objects/submission-section-error.model';
 import { SectionModelComponent } from '../models/section.model';
 import { SectionDataObject } from '../models/section-data.model';
 import { SectionsService } from '../sections.service';
-import { CoarNotifyConfigDataService } from './coar-notify-config-data.service';
-import { LdnPattern } from './submission-coar-notify.config';
 
 /**
  * This component represents a section that contains the submission section-coar-notify form.
@@ -57,15 +55,12 @@ import { LdnPattern } from './submission-coar-notify.config';
   selector: 'ds-submission-section-coar-notify',
   templateUrl: './section-coar-notify.component.html',
   styleUrls: ['./section-coar-notify.component.scss'],
-  standalone: true,
   imports: [
-    NgIf,
-    NgForOf,
     AsyncPipe,
-    TranslateModule,
+    InfiniteScrollModule,
     NgbDropdownModule,
     NgClass,
-    InfiniteScrollModule,
+    TranslateModule,
   ],
   providers: [NgbDropdown],
 })
@@ -135,7 +130,7 @@ export class SubmissionSectionCoarNotifyComponent extends SectionModelComponent 
 
   /**
    * Method called when section is initialized
-   * Retriev available NotifyConfigs
+   * Retrieve available NotifyConfigs
    */
   setCoarNotifyConfig() {
     this.subs.push(

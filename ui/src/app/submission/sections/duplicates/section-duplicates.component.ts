@@ -1,28 +1,24 @@
-import {
-  AsyncPipe,
-  NgForOf,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   Inject,
   OnInit,
 } from '@angular/core';
+import { getItemModuleRoute } from '@dspace/core/router/core-routing-paths';
+import { Metadata } from '@dspace/core/shared/metadata.utils';
+import { WorkspaceitemSectionDuplicatesObject } from '@dspace/core/submission/models/workspaceitem-section-duplicates.model';
+import { URLCombiner } from '@dspace/core/url-combiner/url-combiner';
 import {
   TranslateModule,
   TranslateService,
 } from '@ngx-translate/core';
 import {
   Observable,
-  of as observableOf,
+  of,
   Subscription,
 } from 'rxjs';
 
-import { Metadata } from '../../../core/shared/metadata.utils';
-import { WorkspaceitemSectionDuplicatesObject } from '../../../core/submission/models/workspaceitem-section-duplicates.model';
-import { URLCombiner } from '../../../core/url-combiner/url-combiner';
-import { getItemModuleRoute } from '../../../item-page/item-page-routing-paths';
 import { AlertType } from '../../../shared/alert/alert-type';
 import { VarDirective } from '../../../shared/utils/var.directive';
 import { SubmissionService } from '../../submission.service';
@@ -40,13 +36,10 @@ import { SectionsService } from '../sections.service';
   templateUrl: './section-duplicates.component.html',
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [
-    VarDirective,
-    NgIf,
     AsyncPipe,
     TranslateModule,
-    NgForOf,
+    VarDirective,
   ],
-  standalone: true,
 })
 
 export class SubmissionSectionDuplicatesComponent extends SectionModelComponent implements OnInit {
@@ -122,7 +115,7 @@ export class SubmissionSectionDuplicatesComponent extends SectionModelComponent 
    *     the section status
    */
   public getSectionStatus(): Observable<boolean> {
-    return observableOf(!this.isLoading);
+    return of(!this.isLoading);
   }
 
   /**

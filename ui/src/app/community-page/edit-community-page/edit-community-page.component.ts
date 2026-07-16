@@ -1,8 +1,6 @@
 import {
   AsyncPipe,
   NgClass,
-  NgForOf,
-  NgIf,
 } from '@angular/common';
 import { Component } from '@angular/core';
 import {
@@ -11,11 +9,11 @@ import {
   RouterLink,
   RouterOutlet,
 } from '@angular/router';
+import { getCommunityPageRoute } from '@dspace/core/router/utils/dso-route.utils';
+import { Community } from '@dspace/core/shared/community.model';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { Community } from '../../core/shared/community.model';
 import { EditComColPageComponent } from '../../shared/comcol/comcol-forms/edit-comcol-page/edit-comcol-page.component';
-import { getCommunityPageRoute } from '../community-page-routing-paths';
 
 /**
  * Component that represents the page where a user can edit an existing Community
@@ -23,15 +21,12 @@ import { getCommunityPageRoute } from '../community-page-routing-paths';
 @Component({
   selector: 'ds-edit-community',
   templateUrl: '../../shared/comcol/comcol-forms/edit-comcol-page/edit-comcol-page.component.html',
-  standalone: true,
   imports: [
-    RouterLink,
-    TranslateModule,
-    NgClass,
-    NgForOf,
-    RouterOutlet,
-    NgIf,
     AsyncPipe,
+    NgClass,
+    RouterLink,
+    RouterOutlet,
+    TranslateModule,
   ],
 })
 export class EditCommunityPageComponent extends EditComColPageComponent<Community> {

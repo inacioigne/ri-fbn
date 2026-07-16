@@ -1,12 +1,13 @@
-import {
-  AsyncPipe,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   Component,
   OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DSONameService } from '@dspace/core/breadcrumbs/dso-name.service';
+import { RemoteData } from '@dspace/core/data/remote-data';
+import { Item } from '@dspace/core/shared/item.model';
+import { hasValue } from '@dspace/shared/utils/empty.util';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import {
@@ -15,11 +16,7 @@ import {
   take,
 } from 'rxjs/operators';
 
-import { DSONameService } from '../../../core/breadcrumbs/dso-name.service';
-import { RemoteData } from '../../../core/data/remote-data';
-import { Item } from '../../../core/shared/item.model';
 import { CurationFormComponent } from '../../../curation-form/curation-form.component';
-import { hasValue } from '../../../shared/empty.util';
 
 /**
  * Component for managing a collection's curation tasks
@@ -28,12 +25,10 @@ import { hasValue } from '../../../shared/empty.util';
   selector: 'ds-item-curate',
   templateUrl: './item-curate.component.html',
   imports: [
-    CurationFormComponent,
-    NgIf,
-    TranslateModule,
     AsyncPipe,
+    CurationFormComponent,
+    TranslateModule,
   ],
-  standalone: true,
 })
 export class ItemCurateComponent implements OnInit {
   dsoRD$: Observable<RemoteData<Item>>;

@@ -1,23 +1,21 @@
-import { NgForOf } from '@angular/common';
+
 import {
   Component,
   Input,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { AdminNotifyMetricsRow } from '@dspace/config/admin-notify-metrics.config';
+import { ViewMode } from '@dspace/core/shared/view-mode.model';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ViewMode } from '../../../core/shared/view-mode.model';
 import { NotificationBoxComponent } from '../../../shared/notification-box/notification-box.component';
-import { AdminNotifyMetricsRow } from './admin-notify-metrics.model';
 
 @Component({
   selector: 'ds-admin-notify-metrics',
   templateUrl: './admin-notify-metrics.component.html',
-  standalone: true,
   imports: [
     NotificationBoxComponent,
     TranslateModule,
-    NgForOf,
   ],
 })
 /**

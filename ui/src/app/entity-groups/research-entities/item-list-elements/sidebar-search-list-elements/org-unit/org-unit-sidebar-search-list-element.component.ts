@@ -1,26 +1,33 @@
 import {
   AsyncPipe,
   NgClass,
-  NgIf,
 } from '@angular/common';
 import { Component } from '@angular/core';
+import { Context } from '@dspace/core/shared/context.model';
+import { Item } from '@dspace/core/shared/item.model';
+import { ItemSearchResult } from '@dspace/core/shared/object-collection/item-search-result.model';
+import { ViewMode } from '@dspace/core/shared/view-mode.model';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { Context } from '../../../../../core/shared/context.model';
-import { Item } from '../../../../../core/shared/item.model';
-import { ViewMode } from '../../../../../core/shared/view-mode.model';
-import { ItemSearchResult } from '../../../../../shared/object-collection/shared/item-search-result.model';
+import { MetadataDirective } from '../../../../../shared/metadata.directive';
 import { listableObjectComponent } from '../../../../../shared/object-collection/shared/listable-object/listable-object.decorator';
 import { SidebarSearchListElementComponent } from '../../../../../shared/object-list/sidebar-search-list-element/sidebar-search-list-element.component';
 import { TruncatablePartComponent } from '../../../../../shared/truncatable/truncatable-part/truncatable-part.component';
 
 @listableObjectComponent('OrgUnitSearchResult', ViewMode.ListElement, Context.SideBarSearchModal)
 @listableObjectComponent('OrgUnitSearchResult', ViewMode.ListElement, Context.SideBarSearchModalCurrent)
+@listableObjectComponent('OrgUnitSearchResult', ViewMode.ListElement, Context.ScopeSelectorModal)
+@listableObjectComponent('OrgUnitSearchResult', ViewMode.ListElement, Context.ScopeSelectorModalCurrent)
 @Component({
   selector: 'ds-org-unit-sidebar-search-list-element',
   templateUrl: '../../../../../shared/object-list/sidebar-search-list-element/sidebar-search-list-element.component.html',
-  standalone: true,
-  imports: [TruncatablePartComponent, NgClass, NgIf, AsyncPipe, TranslateModule],
+  imports: [
+    AsyncPipe,
+    MetadataDirective,
+    NgClass,
+    TranslateModule,
+    TruncatablePartComponent,
+  ],
 })
 /**
  * Component displaying a list element for a {@link ItemSearchResult} of type "OrgUnit" within the context of

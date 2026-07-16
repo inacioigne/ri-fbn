@@ -1,17 +1,11 @@
-import {
-  NgFor,
-  NgSwitch,
-  NgSwitchCase,
-  NgTemplateOutlet,
-} from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
   Component,
   Input,
 } from '@angular/core';
+import { Script } from '@dspace/core/shared/scripts/script.model';
+import { ScriptParameterType } from '@dspace/core/shared/scripts/script-parameter-type.model';
 import { TranslateModule } from '@ngx-translate/core';
-
-import { Script } from '../../scripts/script.model';
-import { ScriptParameterType } from '../../scripts/script-parameter-type.model';
 
 /**
  * Components that represents a help section for the script use and parameters
@@ -20,8 +14,10 @@ import { ScriptParameterType } from '../../scripts/script-parameter-type.model';
   selector: 'ds-script-help',
   templateUrl: './script-help.component.html',
   styleUrls: ['./script-help.component.scss'],
-  standalone: true,
-  imports: [NgFor, NgTemplateOutlet, NgSwitch, NgSwitchCase, TranslateModule],
+  imports: [
+    NgTemplateOutlet,
+    TranslateModule,
+  ],
 })
 export class ScriptHelpComponent {
   /**

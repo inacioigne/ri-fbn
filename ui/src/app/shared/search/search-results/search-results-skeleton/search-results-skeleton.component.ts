@@ -1,26 +1,21 @@
-import {
-  AsyncPipe,
-  NgForOf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   Component,
   Input,
   OnInit,
 } from '@angular/core';
+import { ViewMode } from '@dspace/core/shared/view-mode.model';
+import { hasValue } from '@dspace/shared/utils/empty.util';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Observable } from 'rxjs';
 
-import { SearchService } from '../../../../core/shared/search/search.service';
-import { ViewMode } from '../../../../core/shared/view-mode.model';
-import { hasValue } from '../../../empty.util';
+import { SearchService } from '../../search.service';
 
 @Component({
   selector: 'ds-search-results-skeleton',
-  standalone: true,
   imports: [
-    NgxSkeletonLoaderModule,
     AsyncPipe,
-    NgForOf,
+    NgxSkeletonLoaderModule,
   ],
   templateUrl: './search-results-skeleton.component.html',
   styleUrl: './search-results-skeleton.component.scss',

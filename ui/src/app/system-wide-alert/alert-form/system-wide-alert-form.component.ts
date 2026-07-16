@@ -1,7 +1,4 @@
-import {
-  AsyncPipe,
-  NgIf,
-} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -15,6 +12,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PaginatedList } from '@dspace/core/data/paginated-list.model';
+import { RemoteData } from '@dspace/core/data/remote-data';
+import { RequestService } from '@dspace/core/data/request.service';
+import { SystemWideAlertDataService } from '@dspace/core/data/system-wide-alert-data.service';
+import { NotificationsService } from '@dspace/core/notification-system/notifications.service';
+import { getFirstCompletedRemoteData } from '@dspace/core/shared/operators';
+import { SystemWideAlert } from '@dspace/core/shared/system-wide-alert.model';
+import {
+  hasValue,
+  isNotEmpty,
+} from '@dspace/shared/utils/empty.util';
 import {
   NgbDatepickerModule,
   NgbDateStruct,
@@ -38,18 +46,7 @@ import {
   map,
 } from 'rxjs/operators';
 
-import { PaginatedList } from '../../core/data/paginated-list.model';
-import { RemoteData } from '../../core/data/remote-data';
-import { RequestService } from '../../core/data/request.service';
-import { SystemWideAlertDataService } from '../../core/data/system-wide-alert-data.service';
-import { getFirstCompletedRemoteData } from '../../core/shared/operators';
 import { BtnDisabledDirective } from '../../shared/btn-disabled.directive';
-import {
-  hasValue,
-  isNotEmpty,
-} from '../../shared/empty.util';
-import { NotificationsService } from '../../shared/notifications/notifications.service';
-import { SystemWideAlert } from '../system-wide-alert.model';
 
 
 /**
@@ -59,8 +56,16 @@ import { SystemWideAlert } from '../system-wide-alert.model';
   selector: 'ds-system-wide-alert-form',
   styleUrls: ['./system-wide-alert-form.component.scss'],
   templateUrl: './system-wide-alert-form.component.html',
-  standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, UiSwitchModule, NgIf, NgbDatepickerModule, NgbTimepickerModule, AsyncPipe, TranslateModule, BtnDisabledDirective],
+  imports: [
+    AsyncPipe,
+    BtnDisabledDirective,
+    FormsModule,
+    NgbDatepickerModule,
+    NgbTimepickerModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    UiSwitchModule,
+  ],
 })
 export class SystemWideAlertFormComponent implements OnInit {
 
@@ -253,7 +258,7 @@ export class SystemWideAlertFormComponent implements OnInit {
     alert.active = this.formActive.value;
     if (this.counterEnabled$.getValue()) {
       const countDownTo = new Date(this.date.year, this.date.month - 1, this.date.day, this.time.hour, this.time.minute);
-      alert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toUTCString();
+      alert.countdownTo = utcToZonedTime(countDownTo, 'UTC').toISOString();
     } else {
       alert.countdownTo = null;
     }
@@ -278,7 +283,7 @@ export class SystemWideAlertFormComponent implements OnInit {
           this.back();
         }
       } else {
-        this.notificationsService.error(this.translateService.get(`${messagePrefix}.error`, response.errorMessage));
+        this.notificationsService.error(this.translateService.get(`${messagePrefix}.error`));
       }
     });
   }
