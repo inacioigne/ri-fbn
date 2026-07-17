@@ -26,9 +26,11 @@ services:
       dockerfile: Dockerfile.dist
     networks:
     - fbn-net
-    ports:
-    - published: 4001
-      target: 4000
+    # ports:
+    # - published: 4001
+    #   target: 4000
+    expose:
+    - "4001"
   # DSpace (backend) webapp container
   api:
     container_name: fbn-api
